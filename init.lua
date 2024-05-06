@@ -960,6 +960,6 @@ vim.keymap.set("n", "<F2>", ":ToggleTermSendCurrentLine<CR>")
 vim.keymap.set("v", "<F3>", ":ToggleTermSendVisualLines<CR>")
 vim.keymap.set("v", "<F4>", ":ToggleTermSendVisualSelection<CR>")
 vim.keymap.set("n", "<F5>", ':lua vim.cmd("normal! ggvG")<CR>:ToggleTermSendVisualLines<CR>', { silent = true })
-vim.keymap.set("n", "<C-a>", "ggVG")
+vim.keymap.set("n", "C-a", ":ggVG<CR>")
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
