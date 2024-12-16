@@ -1,5 +1,25 @@
 # kickstart.nvim
 
+## My custom notes
+
+Requirements:
+
+#install
+sudo apt install unzip gcc fontconfig
+
+#install npm - I don't remember why
+curl -fsSL https://deb.nodesource.com/setup_21.x | sudo -E bash - && sudo apt-get install -y nodejs
+
+#install nerdfonts
+
+cd  /usr/local/share/fonts
+sudo curl -L https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip --output JetBrainsMono.zip
+sudo unzip JetBrainsMono.zip
+sudo rm -f JetBrainsMono.zip
+sudo fc-cache -fv
+
+The rest is copy from kickstart
+
 ## Introduction
 
 A starting point for Neovim that is:
