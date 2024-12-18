@@ -951,6 +951,16 @@ vim.keymap.set('v', '<F3>', ':ToggleTermSendVisualLines<CR>')
 vim.keymap.set('v', '<F4>', ':ToggleTermSendVisualSelection<CR>')
 vim.keymap.set('n', '<F6>', ':lua vim.cmd("normal! ggvG")<CR>:ToggleTermSendVisualLines<CR>', { silent = true })
 vim.keymap.set('n', '<C-a>', 'ggVG<CR>')
+vim.keymap.set('n', '<A-j>', '3j')
+vim.keymap.set('n', '<A-k>', '3k')
+vim.keymap.set('n', '<C-s>', ':w<CR>')
+vim.keymap.set('n', '<C-s>', ':w<CR>')
+vim.keymap.set('n', '<A-f>', ':b#<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-`>', 'Neotree close', { noremap = true, silent = true })
+vim.keymap.set('n', '`', '~', { noremap = true, silent = true })
+
+
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=3 sts=2 sw=2 et
 

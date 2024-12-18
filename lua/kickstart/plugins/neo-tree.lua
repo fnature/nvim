@@ -11,13 +11,15 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '`', ':Neotree reveal<CR>', { desc = 'NeoTree reveal' } },
+    { '<Tab>', ':Neotree reveal<CR>', { desc = 'NeoTree reveal' } },
   },
   opts = {
     filesystem = {
+      follow_current_file = true, -- Automatically focus the current file
+      hijack_netrw = true, -- Use Neo-tree for directory browsing instead of NetRW
       window = {
         mappings = {
-          ['`'] = 'close_window',
+          ['<Tab>'] = 'close_window',
         },
       },
       filtered_items = {
