@@ -8,7 +8,10 @@ Requirements:
 sudo apt install unzip gcc fontconfig
 
 #install npm - I don't remember why
+
 curl -fsSL https://deb.nodesource.com/setup_21.x | sudo -E bash - && sudo apt-get install -y nodejs
+
+this is not clear.. but maybe it was to get npm..
 
 #install nerdfonts
 
