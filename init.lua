@@ -965,8 +965,8 @@ vim.keymap.set('n', '<A-d>', ':b#<CR>', { noremap = true, silent = true })  -- S
 vim.keymap.set('n', '<A-f>', ':bnext<CR>', { noremap = true, silent = true })  -- Switch to next buffer
 vim.keymap.set('n', '<C-`>', 'Neotree close', { noremap = true, silent = true })  -- Close NeoTree
 vim.keymap.set({'n', 'v'}, '`', '~', { noremap = true, silent = true })  -- Toggle case of character under cursor
-vim.keymap.set('n', '<leader>d', '"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
-vim.keymap.set('n', '<A-q>', ':q<CR>', { noremap = true, silent = true })  -- Delete line without copying to clipboard
+vim.keymap.set('n', '<C-d>', '"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
+vim.keymap.set('n', '<A-q>', ':q<CR>', { noremap = true, silent = true }) --quit
 vim.keymap.set('v', 'p', '"_dP', { noremap = true, silent = true })  -- allows to select and paster override and keep the selection in clipboard
 
 -- The line beneath this is called `modeline`. See `:help modeline`
