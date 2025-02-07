@@ -957,15 +957,14 @@ vim.keymap.set('v', '<F3>', ':ToggleTermSendVisualLines<CR>')  -- Send selected 
 vim.keymap.set('v', '<F4>', ':ToggleTermSendVisualSelection<CR>')  -- Send visual selection to terminal
 vim.keymap.set('n', '<F6>', ':lua vim.cmd("normal! ggvG")<CR>:ToggleTermSendVisualLines<CR>', { silent = true })  -- Select all and send to terminal
 vim.keymap.set('n', '<C-a>', 'ggVG<CR>')  -- Select entire file
-vim.keymap.set('n', '<A-j>', '5j')  -- Move down x lines
-vim.keymap.set('n', '<A-k>', '5k')  -- Move up x lines
+vim.keymap.set({'n', 'v'}, '<A-j>', '8j')  -- Move down x lines
+vim.keymap.set({'n', 'v'}, '<A-k>', '9k')  -- Move up x lines
 vim.keymap.set('n', '<C-s>', ':w<CR>')  -- Save file
 vim.keymap.set('n', '<A-s>', ':bprev<CR>', { noremap = true, silent = true })  -- Switch to previous buffer
 vim.keymap.set('n', '<A-d>', ':b#<CR>', { noremap = true, silent = true })  -- Switch to last buffer
 vim.keymap.set('n', '<A-f>', ':bnext<CR>', { noremap = true, silent = true })  -- Switch to next buffer
 vim.keymap.set('n', '<C-`>', 'Neotree close', { noremap = true, silent = true })  -- Close NeoTree
-vim.keymap.set('n', '`', '~', { noremap = true, silent = true })  -- Toggle case of character under cursor
-vim.keymap.set('v', '`', '~', { noremap = true, silent = true })  -- Toggle case of character under cursor
+vim.keymap.set({'n', 'v'}, '`', '~', { noremap = true, silent = true })  -- Toggle case of character under cursor
 vim.keymap.set('n', '<leader>d', '"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
 vim.keymap.set('n', '<A-q>', ':q<CR>', { noremap = true, silent = true })  -- Delete line without copying to clipboard
 vim.keymap.set('v', 'p', '"_dP', { noremap = true, silent = true })  -- allows to select and paster override and keep the selection in clipboard
