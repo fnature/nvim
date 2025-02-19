@@ -11,7 +11,7 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '<Tab>', ':Neotree reveal<CR>', { desc = 'NeoTree reveal' } },
+    { '<A-e>', ':Neotree reveal<CR>', { desc = 'NeoTree reveal' } },
   },
   opts = {
     filesystem = {
@@ -19,7 +19,7 @@ return {
       hijack_netrw = true, -- Use Neo-tree for directory browsing instead of NetRW
       window = {
         mappings = {
-          ['<Tab>'] = 'close_window',
+          ['<A-e>'] = 'close_window',
         },
       },
       filtered_items = {
