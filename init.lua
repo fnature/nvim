@@ -971,7 +971,9 @@ vim.keymap.set('n', '<F6>', ':lua vim.cmd("normal! ggvG")<CR>:ToggleTermSendVisu
 vim.keymap.set('n', '<C-a>', 'ggVG<CR>')  -- Select entire file
 vim.keymap.set('i', '<C-a>', '<Esc>ggVG<CR>')  -- Select entire file
 vim.keymap.set({'n', 'v'}, '<A-j>', '8j')  -- Move down x lines
-vim.keymap.set({'n', 'v'}, '<A-k>', '9k')  -- Move up x lines
+vim.keymap.set({'n', 'v'}, '<A-k>', '8k')  -- Move up x lines
+vim.keymap.set({'n', 'v'}, '<A-h>', '4h')  -- Move up x lines
+vim.keymap.set({'n', 'v'}, '<A-l>', '4l')  -- Move up x lines
 vim.keymap.set('n', '<C-s>', ':w<CR>')  -- Save file
 vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>')  -- Save file
 vim.keymap.set('n', '<A-s>', ':bprev<CR>', { noremap = true, silent = true })  -- Switch to previous buffer
@@ -982,7 +984,8 @@ vim.keymap.set({'n', 'v'}, '`', '~', { noremap = true, silent = true })  -- Togg
 vim.keymap.set('n', '<C-d>', '"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
 vim.keymap.set('i', '<C-d>', '<Esc>"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
 vim.keymap.set('n', '<A-q>', ':q<CR>', { noremap = true, silent = true }) --quit
-vim.keymap.set('v', 'p', '"_dP', { noremap = true, silent = true })  -- allows to select and paster override and keep the selection in clipboard
+vim.keymap.set('v', 'p', '"_c<Esc>p', { noremap = true, silent = true })  -- allows to select and paster override and keep the selection in clipboard
+vim.keymap.set("n", "<A-o>", ":put =''<CR>k", { noremap = true, silent = true })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=3 sts=2 sw=2 et
