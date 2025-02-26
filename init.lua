@@ -913,7 +913,20 @@ require('lazy').setup({
   --     -- require("toggleterm").send_lines_to_terminal("visual_selection", trim_spaces, { args = vim.v.count })
   --   end,
   -- },
-  { 'akinsho/toggleterm.nvim', version = '*', config = true },
+  -- { 'akinsho/toggleterm.nvim', version = '*', config = true },
+  {
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    opts = {
+      start_in_insert = true,
+      persist_mode = false,  -- Always start in insert mode
+      -- Add other options here as needed
+    },
+    config = function(_, opts)
+      require('toggleterm').setup(opts)
+      -- Additional configuration or key mappings can be added here
+    end,
+  },
   { 'nvim-tree/nvim-web-devicons', enabled = true, version = '*', config = true },
   { --
     'EdenEast/nightfox.nvim',
@@ -962,7 +975,8 @@ require('lazy').setup({
 })
 
 -- Custom keymaps
-vim.keymap.set('n', '<F12>', ':ToggleTerm<CR>')  -- Toggle terminal window
+vim.keymap.set('t','<F12>','<C-\\><C-n>:ToggleTerm<CR>')  -- Toggle terminal window
+vim.keymap.set('n','<F12>',':ToggleTerm<CR>')  -- Toggle terminal window
 vim.keymap.set('n', '<F9>', ':TermExec cmd="python3"<CR>')  -- Execute Python3 in terminal
 vim.keymap.set('n', '<F2>', ':ToggleTermSendCurrentLine<CR>')  -- Send current line to terminal
 vim.keymap.set('v', '<F3>', ':ToggleTermSendVisualLines<CR>')  -- Send selected lines to terminal
