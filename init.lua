@@ -999,7 +999,18 @@ vim.keymap.set('n', '<C-d>', '"_dd', { noremap = true, silent = true })  -- Dele
 vim.keymap.set('i', '<C-d>', '<Esc>"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
 vim.keymap.set('n', '<A-q>', ':q<CR>', { noremap = true, silent = true }) --quit
 vim.keymap.set('v', 'p', '"_c<Esc>p', { noremap = true, silent = true })  -- allows to select and paster override and keep the selection in clipboard
-vim.keymap.set("n", "<A-o>", ":put =''<CR>k", { noremap = true, silent = true })
+vim.keymap.set("n", "<A-o>", ":put =''<CR>k", { noremap = true, silent = true }) -- add empty lines below cursor
+
+-- window resizing
+vim.keymap.set("n", "<C-A-h>", "<C-w><", { noremap = true, silent = true })
+vim.keymap.set("n", "<A-C-j>", "<C-w>-", { noremap = true, silent = true })
+vim.keymap.set("n", "<A-C-k>", "<C-w>+", { noremap = true, silent = true })
+vim.keymap.set("n", "<A-C-l>", "<C-w>>", { noremap = true, silent = true })
+vim.keymap.set("t", "<C-A-h>", "<C-\\><C-n><C-w><", { noremap = true, silent = true })
+vim.keymap.set("t", "<A-C-j>", "<C-\\><C-n><C-w>-", { noremap = true, silent = true })
+vim.keymap.set("t", "<A-C-k>", "<C-\\><C-n><C-w>+", { noremap = true, silent = true })
+vim.keymap.set("t", "<A-C-l>", "<C-\\><C-n><C-w>>", { noremap = true, silent = true })
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=3 sts=2 sw=2 et
