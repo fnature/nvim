@@ -212,6 +212,14 @@ vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
   command = "silent! write",
 })
 
+-- Below doesn't work. It was to disable status bar of terminal, but it disables then for all windows, as the setting is global..
+-- vim.api.nvim_create_autocmd("TermOpen", {
+--   pattern = "*",
+--   callback = function()
+--     vim.opt_local.laststatus = 0  -- Hide status line in terminal buffers
+--   end,
+-- })
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -975,8 +983,8 @@ require('lazy').setup({
 })
 
 -- Custom keymaps
-vim.keymap.set('t','<F12>','<C-\\><C-n>:ToggleTerm<CR>')  -- Toggle terminal window
-vim.keymap.set('n','<F12>',':ToggleTerm<CR>')  -- Toggle terminal window
+vim.keymap.set('t','<A-w>','<C-\\><C-n>:ToggleTerm<CR>')  -- Toggle terminal window
+vim.keymap.set('n','<A-w>',':ToggleTerm<CR>')  -- Toggle terminal window
 vim.keymap.set('n', '<F9>', ':TermExec cmd="python3"<CR>')  -- Execute Python3 in terminal
 vim.keymap.set('n', '<F2>', ':ToggleTermSendCurrentLine<CR>')  -- Send current line to terminal
 vim.keymap.set('v', '<F3>', ':ToggleTermSendVisualLines<CR>')  -- Send selected lines to terminal
