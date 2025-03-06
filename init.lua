@@ -1024,6 +1024,7 @@ vim.keymap.set('i', '<C-d>', '<Esc>"_dd', { noremap = true, silent = true })  --
 vim.keymap.set('n', '<A-q>', ':q<CR>', { noremap = true, silent = true }) --quit
 vim.keymap.set('v', 'p', '"_c<Esc>p', { noremap = true, silent = true })  -- allows to select and paster override and keep the selection in clipboard
 vim.keymap.set("n", "<A-o>", ":put =''<CR>k", { noremap = true, silent = true }) -- add empty lines below cursor
+vim.keymap.set('n', '<A-p>', 'viwp<CR>', { noremap = true, silent = true })  -- Paste and override word on cursor
 
 -- window resizing
 vim.keymap.set("n", "<C-A-h>", "<C-w><", { noremap = true, silent = true })
