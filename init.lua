@@ -20,6 +20,8 @@
 =====================================================================
 =====================================================================
 
+
+
 What is Kickstart?
 
   Kickstart.nvim is *not* a distribution.
@@ -154,7 +156,7 @@ vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
-vim.opt.cursorline = true
+vim.opt.cursorline = false
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
@@ -272,6 +274,7 @@ require('lazy').setup({
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
         ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
         ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
+        ['<leader>x'] = { name = 'Delete whole line without new line', _ = 'which_key_ignore' },
       }
       -- visual mode
       require('which-key').register({
@@ -999,6 +1002,7 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Custom keymaps
+-- ToggleTerm
 vim.keymap.set('t','<A-w>','<C-\\><C-n>:ToggleTerm<CR>')  -- Toggle terminal window
 vim.keymap.set('n','<A-w>',':ToggleTerm<CR>')  -- Toggle terminal window
 vim.keymap.set('n', '<F9>', ':TermExec cmd="python3"<CR>')  -- Execute Python3 in terminal
@@ -1006,26 +1010,19 @@ vim.keymap.set('n', '<F2>', ':ToggleTermSendCurrentLine<CR>')  -- Send current l
 vim.keymap.set('v', '<F3>', ':ToggleTermSendVisualLines<CR>')  -- Send selected lines to terminal
 vim.keymap.set('v', '<F4>', ':ToggleTermSendVisualSelection<CR>')  -- Send visual selection to terminal
 vim.keymap.set('n', '<F6>', ':lua vim.cmd("normal! ggvG")<CR>:ToggleTermSendVisualLines<CR>', { silent = true })  -- Select all and send to terminal
+-- Selects
 vim.keymap.set('n', '<C-a>', 'ggVG<CR>')  -- Select entire file
 vim.keymap.set('i', '<C-a>', '<Esc>ggVG<CR>')  -- Select entire file
-vim.keymap.set({'n', 'v'}, '<A-j>', '8j')  -- Move down x lines
-vim.keymap.set({'n', 'v'}, '<A-k>', '8k')  -- Move up x lines
+-- Moves
+vim.keymap.set({'n', 'v'}, '<A-j>', '6j')  -- Move down x lines
+vim.keymap.set({'n', 'v'}, '<A-k>', '6k')  -- Move up x lines
 vim.keymap.set({'n', 'v'}, '<A-h>', '4h')  -- Move up x lines
 vim.keymap.set({'n', 'v'}, '<A-l>', '4l')  -- Move up x lines
-vim.keymap.set('n', '<C-s>', ':w<CR>')  -- Save file
-vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>')  -- Save file
 vim.keymap.set('n', '<A-s>', ':bprev<CR>', { noremap = true, silent = true })  -- Switch to previous buffer
 vim.keymap.set('n', '<A-d>', ':b#<CR>', { noremap = true, silent = true })  -- Switch to last buffer
 vim.keymap.set('n', '<A-f>', ':bnext<CR>', { noremap = true, silent = true })  -- Switch to next buffer
 -- vim.keymap.set('n', '<C-`>', 'Neotree close', { noremap = true, silent = true })  -- Close NeoTree
-vim.keymap.set({'n', 'v'}, '`', '~', { noremap = true, silent = true })  -- Toggle case of character under cursor
-vim.keymap.set('n', '<C-d>', '"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
-vim.keymap.set('i', '<C-d>', '<Esc>"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
 vim.keymap.set('n', '<A-q>', ':q<CR>', { noremap = true, silent = true }) --quit
-vim.keymap.set('v', 'p', '"_c<Esc>p', { noremap = true, silent = true })  -- allows to select and paster override and keep the selection in clipboard
-vim.keymap.set("n", "<A-o>", ":put =''<CR>k", { noremap = true, silent = true }) -- add empty lines below cursor
-vim.keymap.set('n', '<A-p>', 'viwp<CR>', { noremap = true, silent = true })  -- Paste and override word on cursor
-
 -- window resizing
 vim.keymap.set("n", "<C-A-h>", "<C-w><", { noremap = true, silent = true })
 vim.keymap.set("n", "<A-C-j>", "<C-w>-", { noremap = true, silent = true })
@@ -1035,8 +1032,18 @@ vim.keymap.set("t", "<C-A-h>", "<C-\\><C-n><C-w><", { noremap = true, silent = t
 vim.keymap.set("t", "<A-C-j>", "<C-\\><C-n><C-w>-", { noremap = true, silent = true })
 vim.keymap.set("t", "<A-C-k>", "<C-\\><C-n><C-w>+", { noremap = true, silent = true })
 vim.keymap.set("t", "<A-C-l>", "<C-\\><C-n><C-w>>", { noremap = true, silent = true })
+-- others
+vim.keymap.set('n', '<C-s>', ':w<CR>')  -- Save file
+vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>')  -- Save file
+vim.keymap.set({'n', 'v'}, '`', '~', { noremap = true, silent = true })  -- Toggle case of character under cursor
+vim.keymap.set('n', '<C-d>', '"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
+vim.keymap.set('i', '<C-d>', '<Esc>"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
+vim.keymap.set('v', 'p', '"_c<Esc>p', { noremap = true, silent = true })  -- allows to select and paster override and keep the selection in clipboard
+vim.keymap.set("n", "<A-o>", ":put =''<CR>k", { noremap = true, silent = true }) -- add empty lines below cursor
+vim.keymap.set('n', '<A-p>', 'viwp<CR>', { noremap = true, silent = true })  -- Paste and override word on cursor
+vim.keymap.set('n', '<leader>x', '0vg_d', { noremap = true, silent = true }) -- Clear the line without deleting it
+vim.keymap.set('v', '<leader>x', ':s/.*//<CR>:let @/ = ""<CR>', { noremap = true, silent = true }) -- Clear the selection without deleting the lines
 
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=3 sts=2 sw=2 et
-
