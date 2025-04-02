@@ -933,6 +933,89 @@ require('lazy').setup({
     --   })
     -- end,
   },
+  {
+    'dyng/ctrlsf.vim',
+    config = function()
+      -- Set ripgrep as the default search tool
+      vim.g.ctrlsf_default_search_tool = 'rg'
+    end
+  },
+  {
+    "yetone/avante.nvim",
+    event = "VeryLazy",
+    version = false, -- Never set this value to "*"! Never!
+    opts = {
+      -- add any opts here
+      -- for example
+      provider = "claude",
+      claude = {
+        endpoint = "https://api.anthropic.com",
+        model = "claude-3-5-sonnet-20241022",
+        timeout = 30000, -- Timeout in milliseconds
+        temperature = 0,
+        max_tokens = 4096,
+      },
+    },
+    behaviour = {
+      enable_claude_text_editor_tool_mode = true,
+    },
+    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+    build = "make",
+    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "stevearc/dressing.nvim",
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      --- The below dependencies are optional,
+      "echasnovski/mini.pick", -- for file_selector provider mini.pick
+      "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+      "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+      "ibhagwan/fzf-lua", -- for file_selector provider fzf
+      "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+      "zbirenbaum/copilot.lua", -- for providers='copilot'
+      {
+        -- support for image pasting
+        "HakonHarnes/img-clip.nvim",
+        event = "VeryLazy",
+        opts = {
+          -- recommended settings
+          default = {
+            embed_image_as_base64 = false,
+            prompt_for_file_name = false,
+            drag_and_drop = {
+              insert_mode = true,
+            },
+            -- required for Windows users
+            use_absolute_path = true,
+          },
+        },
+      },
+      {
+        -- Make sure to set this up properly if you have lazy=true
+        'MeanderingProgrammer/render-markdown.nvim',
+        opts = {
+          file_types = { "markdown", "Avante" },
+        },
+        ft = { "markdown", "Avante" },
+      },
+    },
+  },
+  {
+    "folke/noice.nvim",
+     event = "VeryLazy",
+    opts = {
+      -- add any options here
+    },
+    dependencies = {
+      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+      "MunifTanjim/nui.nvim",
+      -- OPTIONAL:
+      --   `nvim-notify` is only needed, if you want to use the notification view.
+      --   If not available, we use `mini` as the fallback
+      "rcarriga/nvim-notify",
+      }
+  }
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
@@ -940,7 +1023,8 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
-}, {
+},
+{
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
@@ -1038,12 +1122,16 @@ vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>')  -- Save file
 vim.keymap.set({'n', 'v'}, '`', '~', { noremap = true, silent = true })  -- Toggle case of character under cursor
 vim.keymap.set('n', '<C-d>', '"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
 vim.keymap.set('i', '<C-d>', '<Esc>"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
-vim.keymap.set('v', 'p', '"_c<Esc>p', { noremap = true, silent = true })  -- allows to select and paster override and keep the selection in clipboard
+vim.keymap.set('v', 'p', '"_c<Esc>p', { noremap = true, silent = true })  -- allows to select and paste + override and keep the selection in clipboard
 vim.keymap.set("n", "<A-o>", ":put =''<CR>k", { noremap = true, silent = true }) -- add empty lines below cursor
 vim.keymap.set('n', '<A-p>', 'viwp<CR>', { noremap = true, silent = true })  -- Paste and override word on cursor
 vim.keymap.set('n', '<leader>x', '0vg_d', { noremap = true, silent = true }) -- Clear the line without deleting it
 vim.keymap.set('v', '<leader>x', ':s/.*//<CR>:let @/ = ""<CR>', { noremap = true, silent = true }) -- Clear the selection without deleting the lines
 
+
+-- 'dyng/ctrlsf.vim',
+-- :CtrlSF mypattern % = search for mypattern in current file
+-- :CtrlSF mypattern myfolder = search for mypattern in all files in specified folder
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=3 sts=2 sw=2 et
