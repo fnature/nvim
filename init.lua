@@ -1108,14 +1108,14 @@ vim.keymap.set('n', '<A-f>', ':bnext<CR>', { noremap = true, silent = true })  -
 -- vim.keymap.set('n', '<C-`>', 'Neotree close', { noremap = true, silent = true })  -- Close NeoTree
 vim.keymap.set('n', '<A-q>', ':q<CR>', { noremap = true, silent = true }) --quit
 -- window resizing
-vim.keymap.set("n", "<C-A-h>", "<C-w><", { noremap = true, silent = true })
-vim.keymap.set("n", "<A-C-j>", "<C-w>-", { noremap = true, silent = true })
-vim.keymap.set("n", "<A-C-k>", "<C-w>+", { noremap = true, silent = true })
-vim.keymap.set("n", "<A-C-l>", "<C-w>>", { noremap = true, silent = true })
-vim.keymap.set("t", "<C-A-h>", "<C-\\><C-n><C-w><", { noremap = true, silent = true })
-vim.keymap.set("t", "<A-C-j>", "<C-\\><C-n><C-w>-", { noremap = true, silent = true })
-vim.keymap.set("t", "<A-C-k>", "<C-\\><C-n><C-w>+", { noremap = true, silent = true })
-vim.keymap.set("t", "<A-C-l>", "<C-\\><C-n><C-w>>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-A-h>", "<C-w>9<", { noremap = true, silent = true })
+vim.keymap.set("n", "<A-C-j>", "<C-w>3-", { noremap = true, silent = true })
+vim.keymap.set("n", "<A-C-k>", "<C-w>3+", { noremap = true, silent = true })
+vim.keymap.set("n", "<A-C-l>", "<C-w>9>", { noremap = true, silent = true })
+vim.keymap.set("t", "<C-A-h>", "<C-\\><C-n><C-w>9<", { noremap = true, silent = true })
+vim.keymap.set("t", "<A-C-j>", "<C-\\><C-n><C-w>3-", { noremap = true, silent = true })
+vim.keymap.set("t", "<A-C-k>", "<C-\\><C-n><C-w>3+", { noremap = true, silent = true })
+vim.keymap.set("t", "<A-C-l>", "<C-\\><C-n><C-w>9>", { noremap = true, silent = true })
 -- others
 vim.keymap.set('n', '<C-s>', ':w<CR>')  -- Save file
 vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>')  -- Save file
