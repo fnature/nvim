@@ -1016,10 +1016,20 @@ require('lazy').setup({
       -- route all "show‑mode" messages (which includes macro recording)
       -- into a notify pop‑up so you actually see them
       routes = {
+        -- 1️⃣ show all "show‑mode" messages (recording @a`, etc.)
         {
           view   = "notify",
           filter = { event = "msg_showmode" },
         },
+        -- 2️⃣ show any "mark … set" messages (e.g. when you do `ma` → "mark a set") NOT WORKING
+        -- {
+        --   view   = "notify",
+        --   filter = {
+        --     event = "msg_show",    -- catch generic Vim messages :contentReference[oaicite:0]{index=0}
+        --     kind  = "",            -- untyped messages (built‑in Echos, etc.) :contentReference[oaicite:1]{index=1}
+        --     find  = "mark",        -- match substring "mark" in the output
+        --   },
+        -- },
       },
     },
     dependencies = {
