@@ -1143,7 +1143,9 @@ vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>')  -- Save file
 vim.keymap.set({'n', 'v'}, '`', '~', { noremap = true, silent = true })  -- Toggle case of character under cursor
 vim.keymap.set('n', '<C-d>', '"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
 vim.keymap.set('i', '<C-d>', '<Esc>"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
-vim.keymap.set('v', 'p', '"_c<Esc>p', { noremap = true, silent = true })  -- allows to select and paste + override and keep the selection in clipboard
+-- vim.keymap.set('v', 'p', '"_c<Esc>p', { noremap = true, silent = true })  -- allows to select and paste + override and keep the selection in clipboard
+vim.keymap.set('v', 'p', '"_dP', { noremap = true, silent = true })  -- allows to paste multiple time same content because what is deleted isn't saved, ie it is sent to "_ which is the black hole register
+vim.keymap.set('v', '<A-p>', '"0p', { noremap = true, silent = true })  -- allows to paste multiple times same register 0
 vim.keymap.set("n", "<A-o>", ":put =''<CR>k", { noremap = true, silent = true }) -- add empty lines below cursor
 vim.keymap.set('n', '<A-p>', 'viwp<CR>', { noremap = true, silent = true })  -- Paste and override word on cursor
 vim.keymap.set('n', '<leader>x', '0vg_d', { noremap = true, silent = true }) -- Clear the line without deleting it
