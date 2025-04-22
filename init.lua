@@ -109,7 +109,7 @@ vim.g.have_nerd_font = true
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -275,6 +275,7 @@ require('lazy').setup({
         ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
         ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
         ['<leader>x'] = { name = 'Delete whole line without new line', _ = 'which_key_ignore' },
+        ['<leader>f'] = { name = 'Mini[F]iles', _ = 'which_key_ignore' },
       }
       -- visual mode
       require('which-key').register({
@@ -814,6 +815,9 @@ require('lazy').setup({
       --
       -- Shows indentation lines
       require('mini.indentscope').setup()
+      --
+      -- Folder explorer
+      require('mini.files').setup()
     end,
   },
   { -- Highlight, edit, and navigate code
@@ -1003,18 +1007,25 @@ require('lazy').setup({
   },
   {
     "folke/noice.nvim",
-     event = "VeryLazy",
+    event = "VeryLazy",
     opts = {
-      -- add any options here
+      -- re‑enable the messages system
+      messages = {
+        enabled = true,
+      },
+      -- route all "show‑mode" messages (which includes macro recording)
+      -- into a notify pop‑up so you actually see them
+      routes = {
+        {
+          view   = "notify",
+          filter = { event = "msg_showmode" },
+        },
+      },
     },
     dependencies = {
-      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
       "MunifTanjim/nui.nvim",
-      -- OPTIONAL:
-      --   `nvim-notify` is only needed, if you want to use the notification view.
-      --   If not available, we use `mini` as the fallback
       "rcarriga/nvim-notify",
-      }
+    },
   }
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -1127,11 +1138,13 @@ vim.keymap.set("n", "<A-o>", ":put =''<CR>k", { noremap = true, silent = true })
 vim.keymap.set('n', '<A-p>', 'viwp<CR>', { noremap = true, silent = true })  -- Paste and override word on cursor
 vim.keymap.set('n', '<leader>x', '0vg_d', { noremap = true, silent = true }) -- Clear the line without deleting it
 vim.keymap.set('v', '<leader>x', ':s/.*//<CR>:let @/ = ""<CR>', { noremap = true, silent = true }) -- Clear the selection without deleting the lines
-
+-- Mini files
+vim.keymap.set('n', '<leader>f', ':lua MiniFiles.open()<CR>', { noremap = true, silent = true })
 
 -- 'dyng/ctrlsf.vim',
 -- :CtrlSF mypattern % = search for mypattern in current file
 -- :CtrlSF mypattern myfolder = search for mypattern in all files in specified folder
 
 -- The line beneath this is called `modeline`. See `:help modeline`
+--
 -- vim: ts=3 sts=2 sw=2 et
