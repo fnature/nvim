@@ -1083,30 +1083,17 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagn
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
--- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
--- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
--- is not what someone will guess without a bit more experience.
---
--- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
--- or just use <C-\><C-n> to exit terminal mode
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
-
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 -- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 -- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
--- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
---
---  See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+-- Custom keymaps --
 
--- Custom keymaps
+-- Mini files
+vim.keymap.set('n', '<leader>f', ':lua MiniFiles.open()<CR>', { noremap = true, silent = true })
+
 -- ToggleTerm
 vim.keymap.set('t','<A-w>','<C-\\><C-n>:ToggleTerm<CR>')  -- Toggle terminal window
 vim.keymap.set('n','<A-w>',':ToggleTerm<CR>')  -- Toggle terminal window
@@ -1118,7 +1105,19 @@ vim.keymap.set('n', '<F6>', ':lua vim.cmd("normal! ggvG")<CR>:ToggleTermSendVisu
 -- Selects
 vim.keymap.set('n', '<C-a>', 'ggVG<CR>')  -- Select entire file
 vim.keymap.set('i', '<C-a>', '<Esc>ggVG<CR>')  -- Select entire file
+
 -- Moves
+-- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
+-- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
+-- is not what someone will guess without a bit more experience.
+-- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
+-- or just use <C-\><C-n> to exit terminal mode
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+--  See `:help wincmd` for a list of all window commands
+vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 vim.keymap.set({'n', 'v'}, '<A-j>', '6j')  -- Move down x lines
 vim.keymap.set({'n', 'v'}, '<A-k>', '6k')  -- Move up x lines
 vim.keymap.set({'n', 'v'}, '<A-h>', '4h')  -- Move up x lines
@@ -1128,6 +1127,7 @@ vim.keymap.set('n', '<A-d>', ':b#<CR>', { noremap = true, silent = true })  -- S
 vim.keymap.set('n', '<A-f>', ':bnext<CR>', { noremap = true, silent = true })  -- Switch to next buffer
 -- vim.keymap.set('n', '<C-`>', 'Neotree close', { noremap = true, silent = true })  -- Close NeoTree
 vim.keymap.set('n', '<A-q>', ':q<CR>', { noremap = true, silent = true }) --quit
+
 -- window resizing
 vim.keymap.set("n", "<C-A-h>", "<C-w>9<", { noremap = true, silent = true })
 vim.keymap.set("n", "<A-C-j>", "<C-w>3-", { noremap = true, silent = true })
@@ -1137,21 +1137,27 @@ vim.keymap.set("t", "<C-A-h>", "<C-\\><C-n><C-w>9<", { noremap = true, silent = 
 vim.keymap.set("t", "<A-C-j>", "<C-\\><C-n><C-w>3-", { noremap = true, silent = true })
 vim.keymap.set("t", "<A-C-k>", "<C-\\><C-n><C-w>3+", { noremap = true, silent = true })
 vim.keymap.set("t", "<A-C-l>", "<C-\\><C-n><C-w>9>", { noremap = true, silent = true })
--- others
+
+-- files
+vim.keymap.set('n', '<A-f>', ":let @+ = expand('%:p')<CR>", { noremap = true })  -- Copy file name
 vim.keymap.set('n', '<C-s>', ':w<CR>')  -- Save file
 vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>')  -- Save file
-vim.keymap.set({'n', 'v'}, '`', '~', { noremap = true, silent = true })  -- Toggle case of character under cursor
-vim.keymap.set('n', '<C-d>', '"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
-vim.keymap.set('i', '<C-d>', '<Esc>"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
+
+-- copy paste
 -- vim.keymap.set('v', 'p', '"_c<Esc>p', { noremap = true, silent = true })  -- allows to select and paste + override and keep the selection in clipboard
-vim.keymap.set('v', 'p', '"_dP', { noremap = true, silent = true })  -- allows to paste multiple time same content because what is deleted isn't saved, ie it is sent to "_ which is the black hole register
+vim.keymap.set('v', 'p', '"_dP', { noremap = true, silent = true })  -- allows to paste multiple time same content because what is deleted isn't saved, ie it sent to "_ which is the black hole register
 vim.keymap.set('v', '<A-p>', '"0p', { noremap = true, silent = true })  -- allows to paste multiple times same register 0
 vim.keymap.set("n", "<A-o>", ":put =''<CR>k", { noremap = true, silent = true }) -- add empty lines below cursor
 vim.keymap.set('n', '<A-p>', 'viwp<CR>', { noremap = true, silent = true })  -- Paste and override word on cursor
+
+-- lines
+vim.keymap.set('n', '<C-d>', '"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
+vim.keymap.set('i', '<C-d>', '<Esc>"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
 vim.keymap.set('n', '<leader>x', '0vg_d', { noremap = true, silent = true }) -- Clear the line without deleting it
 vim.keymap.set('v', '<leader>x', ':s/.*//<CR>:let @/ = ""<CR>', { noremap = true, silent = true }) -- Clear the selection without deleting the lines
--- Mini files
-vim.keymap.set('n', '<leader>f', ':lua MiniFiles.open()<CR>', { noremap = true, silent = true })
+
+-- others
+vim.keymap.set({'n', 'v'}, '`', '~', { noremap = true, silent = true })  -- Toggle case of character under cursor
 
 -- 'dyng/ctrlsf.vim',
 -- :CtrlSF mypattern % = search for mypattern in current file
