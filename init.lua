@@ -266,21 +266,19 @@ require('lazy').setup({
       require('which-key').setup()
 
       -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-        ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
-        ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
-        ['<leader>x'] = { name = 'Delete whole line without new line', _ = 'which_key_ignore' },
-        ['<leader>f'] = { name = 'Mini[F]iles', _ = 'which_key_ignore' },
+      require("which-key").add {
+        { "<leader>c", name = "[C]ode" },
+        { "<leader>d", name = "[D]ocument" },
+        { "<leader>r", name = "[R]ename" },
+        { "<leader>s", name = "[S]earch" },
+        { "<leader>t", name = "[T]oggle" },
+        { "<leader>w", name = "[W]orkspace" },
+        { "<leader>h", name = "Git [H]unk", mode = { "n", "v" } },
+        { "<leader>x", name = "Delete whole line without new line" },
+        { "<leader>f", name = "Mini[F]iles" },
+        -- for visual mode grouping:
+        { "<leader>", name = "VISUAL <leader>", mode = "v" },
       }
-      -- visual mode
-      require('which-key').register({
-        ['<leader>h'] = { 'Git [H]unk' },
-      }, { mode = 'v' })
     end,
   },
 
@@ -938,10 +936,16 @@ require('lazy').setup({
     -- end,
   },
   {
+    -- :CtrlSF mypattern % = search for mypattern in current file
+    -- :CtrlSF mypattern myfolder = search for mypattern in all files in specified folder
     'dyng/ctrlsf.vim',
     config = function()
       -- Set ripgrep as the default search tool
       vim.g.ctrlsf_default_search_tool = 'rg'
+      vim.g.ctrlsf_auto_focus = {
+        at = "done",
+        duration_less_than = 1000
+      }
     end
   },
   {
@@ -952,20 +956,25 @@ require('lazy').setup({
       -- add any opts here
       -- for example
       provider = "claude",
-      claude = {
-        endpoint = "https://api.anthropic.com",
-        model = "claude-3-5-sonnet-20241022",
-        timeout = 30000, -- Timeout in milliseconds
-        temperature = 0,
-        max_tokens = 4096,
+
+      -- New providers table
+      providers = {
+        claude = {
+          endpoint = "https://api.anthropic.com",
+          model = "claude-3-5-sonnet-20241022",
+          timeout = 30000,
+          extra_request_body = {
+            temperature = 0,
+            max_tokens = 4096,
+          },
+        },
       },
+
     },
     behaviour = {
       enable_claude_text_editor_tool_mode = true,
     },
-    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-    build = "make",
-    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true` build = "make", build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
       "stevearc/dressing.nvim",
@@ -978,23 +987,23 @@ require('lazy').setup({
       "ibhagwan/fzf-lua", -- for file_selector provider fzf
       "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
       "zbirenbaum/copilot.lua", -- for providers='copilot'
-      {
-        -- support for image pasting
-        "HakonHarnes/img-clip.nvim",
-        event = "VeryLazy",
-        opts = {
-          -- recommended settings
-          default = {
-            embed_image_as_base64 = false,
-            prompt_for_file_name = false,
-            drag_and_drop = {
-              insert_mode = true,
-            },
-            -- required for Windows users
-            use_absolute_path = true,
-          },
-        },
-      },
+      -- {
+      --   -- support for image pasting
+      --   "HakonHarnes/img-clip.nvim",
+      --   event = "VeryLazy",
+      --   opts = {
+      --     -- recommended settings
+      --     default = {
+      --       embed_image_as_base64 = false,
+      --       prompt_for_file_name = false,
+      --       drag_and_drop = {
+      --         insert_mode = true,
+      --       },
+      --       -- required for Windows users
+      --       use_absolute_path = true,
+      --     },
+      --   },
+      -- },
       {
         -- Make sure to set this up properly if you have lazy=true
         'MeanderingProgrammer/render-markdown.nvim',
@@ -1118,12 +1127,16 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('t', '<C-h>', '<C-\\><C-n><C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w><C-l>', { desc = 'Move focus to the right window' })
+vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w><C-j>', { desc = 'Move focus to the lower window' })
+vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w><C-k>', { desc = 'Move focus to the upper window' })
 vim.keymap.set({'n', 'v'}, '<A-j>', '6j')  -- Move down x lines
 vim.keymap.set({'n', 'v'}, '<A-k>', '6k')  -- Move up x lines
 vim.keymap.set({'n', 'v'}, '<A-h>', '4h')  -- Move up x lines
 vim.keymap.set({'n', 'v'}, '<A-l>', '4l')  -- Move up x lines
 vim.keymap.set('n', '<A-s>', ':bprev<CR>', { noremap = true, silent = true })  -- Switch to previous buffer
-vim.keymap.set('n', '<A-d>', ':b#<CR>', { noremap = true, silent = true })  -- Switch to last buffer
+-- vim.keymap.set('n', '<A-d>', ':b#<CR>', { noremap = true, silent = true })  -- Switch to last buffer
 vim.keymap.set('n', '<A-f>', ':bnext<CR>', { noremap = true, silent = true })  -- Switch to next buffer
 -- vim.keymap.set('n', '<C-`>', 'Neotree close', { noremap = true, silent = true })  -- Close NeoTree
 vim.keymap.set('n', '<A-q>', ':q<CR>', { noremap = true, silent = true }) --quit
@@ -1151,17 +1164,15 @@ vim.keymap.set("n", "<A-o>", ":put =''<CR>k", { noremap = true, silent = true })
 vim.keymap.set('n', '<A-p>', 'viwp<CR>', { noremap = true, silent = true })  -- Paste and override word on cursor
 
 -- lines
-vim.keymap.set('n', '<C-d>', '"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
-vim.keymap.set('i', '<C-d>', '<Esc>"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
+vim.keymap.set('n', '<A-d>', '"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
+vim.keymap.set('i', '<A-d>', '<Esc>"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
+vim.keymap.set('v', '<A-d>', '"_d', { noremap = true, silent = true })  -- Delete lines without copying to clipboard
 vim.keymap.set('n', '<leader>x', '0vg_d', { noremap = true, silent = true }) -- Clear the line without deleting it
 vim.keymap.set('v', '<leader>x', ':s/.*//<CR>:let @/ = ""<CR>', { noremap = true, silent = true }) -- Clear the selection without deleting the lines
 
 -- others
 vim.keymap.set({'n', 'v'}, '`', '~', { noremap = true, silent = true })  -- Toggle case of character under cursor
 
--- 'dyng/ctrlsf.vim',
--- :CtrlSF mypattern % = search for mypattern in current file
--- :CtrlSF mypattern myfolder = search for mypattern in all files in specified folder
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 --
