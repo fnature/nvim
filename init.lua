@@ -1025,6 +1025,11 @@ require('lazy').setup({
       -- route all "show‑mode" messages (which includes macro recording)
       -- into a notify pop‑up so you actually see them
       routes = {
+        -- Show jumps in different view instead of notify -- IT WORKS BUT NOT USEFUL
+        -- {
+        --   view = "split",
+        --   filter = { cmdline = "jumps" },
+        -- },
         -- 1️⃣ show all "show‑mode" messages (recording @a`, etc.)
         {
           view   = "notify",
@@ -1152,7 +1157,7 @@ vim.keymap.set("t", "<A-C-k>", "<C-\\><C-n><C-w>3+", { noremap = true, silent = 
 vim.keymap.set("t", "<A-C-l>", "<C-\\><C-n><C-w>9>", { noremap = true, silent = true })
 
 -- files
-vim.keymap.set('n', '<A-f>', ":let @+ = expand('%:p')<CR>", { noremap = true })  -- Copy file name
+vim.keymap.set('n', '<A-n>', ":let @+ = expand('%:p')<CR>", { noremap = true })  -- Copy file name
 vim.keymap.set('n', '<C-s>', ':w<CR>')  -- Save file
 vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>')  -- Save file
 
