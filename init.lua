@@ -791,8 +791,23 @@ require('lazy').setup({
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.surround').setup()
-
+      require('mini.surround').setup({
+        custom_surroundings = {
+          ['('] = { output = { left = '(', right = ')' } },
+          ['['] = { output = { left = '[', right = ']' } },
+          ['{'] = { output = { left = '{', right = '}' } },
+          ['<'] = { output = { left = '<', right = '>' } },
+        },
+        mappings = {
+          add = 'gs',       -- instead of 'sa'
+          delete = 'gd',
+          replace = 'gr',
+          find = 'gf',
+          find_left = 'gF',
+          highlight = 'gh',
+          update_n_lines = 'gn',
+        },
+      })
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
@@ -1050,7 +1065,39 @@ require('lazy').setup({
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
     },
-  }
+  },
+  -- I didn't have much success with edgy as it breaks my custom keybindings for window resizing + other bugs ...
+  -- {
+  --   "folke/edgy.nvim",
+  --   event = "VeryLazy",
+  --   init = function()
+  --     -- views can only be fully collapsed with the global statusline
+  --     vim.opt.laststatus = 3
+  --     -- Default splitting will cause your main splits to jump when opening an edgebar.
+  --     -- To prevent this, set `splitkeep` to either `screen` or `topline`.
+  --     vim.opt.splitkeep = "screen"
+  --   end,
+  --   opts = {
+  --     bottom = {
+  --       { ft = "toggleterm", size = { height = 0.30 } },
+  --     },
+  --     left = {
+  --       { ft = "neo-tree" },
+  --     },
+  --     -- Disable default resize mappings
+  --     keys = {
+  --       -- Disable the default resize mappings
+  --       resize_left = false,
+  --       resize_right = false,
+  --       resize_up = false,
+  --       resize_down = false,
+  --     },
+  --     -- Add any keys you want Edgy to ignore
+  --     wo = {
+  --       winbar = false,
+  --     },
+  --   },
+  -- }
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
@@ -1109,8 +1156,8 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('n', '<leader>f', ':lua MiniFiles.open()<CR>', { noremap = true, silent = true })
 
 -- ToggleTerm
-vim.keymap.set('t','<A-w>','<C-\\><C-n>:ToggleTerm<CR>')  -- Toggle terminal window
-vim.keymap.set('n','<A-w>',':ToggleTerm<CR>')  -- Toggle terminal window
+vim.keymap.set('t','<A-e>','<C-\\><C-n>:ToggleTerm<CR>')  -- Toggle terminal window
+vim.keymap.set('n','<A-e>',':ToggleTerm<CR>')  -- Toggle terminal window
 vim.keymap.set('n', '<F9>', ':TermExec cmd="python3"<CR>')  -- Execute Python3 in terminal
 vim.keymap.set('n', '<F2>', ':ToggleTermSendCurrentLine<CR>')  -- Send current line to terminal
 vim.keymap.set('v', '<F3>', ':ToggleTermSendVisualLines<CR>')  -- Send selected lines to terminal
@@ -1121,6 +1168,7 @@ vim.keymap.set('n', '<C-a>', 'ggVG<CR>')  -- Select entire file
 vim.keymap.set('i', '<C-a>', '<Esc>ggVG<CR>')  -- Select entire file
 
 -- Moves
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -1128,14 +1176,22 @@ vim.keymap.set('i', '<C-a>', '<Esc>ggVG<CR>')  -- Select entire file
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 --  See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-vim.keymap.set('t', '<C-h>', '<C-\\><C-n><C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+vim.keymap.set('n', '<A-H>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<A-L>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+vim.keymap.set('n', '<A-J>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+vim.keymap.set('n', '<A-K>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+vim.keymap.set('i', '<A-H>', '<Esc><C-w>h', { desc = 'Move focus to the left window' })
+vim.keymap.set('i', '<A-L>', '<Esc><C-w>l', { desc = 'Move focus to the right window' })
+vim.keymap.set('i', '<A-J>', '<Esc><C-w>j', { desc = 'Move focus to the lower window' })
+vim.keymap.set('i', '<A-K>', '<Esc><C-w>k', { desc = 'Move focus to the upper window' })
+
+vim.keymap.set('t', '<A-H>', '<C-\\><C-n><C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('t', '<A-L>', '<C-\\><C-n><C-w><C-l>', { desc = 'Move focus to the right window' })
+vim.keymap.set('t', '<A-J>', '<C-\\><C-n><C-w><C-j>', { desc = 'Move focus to the lower window' })
+vim.keymap.set('t', '<A-K>', '<C-\\><C-n><C-w><C-k>', { desc = 'Move focus to the upper window' })
+
 vim.keymap.set({'n', 'v'}, '<A-j>', '6j')  -- Move down x lines
 vim.keymap.set({'n', 'v'}, '<A-k>', '6k')  -- Move up x lines
 vim.keymap.set({'n', 'v'}, '<A-h>', '4h')  -- Move up x lines
@@ -1177,7 +1233,6 @@ vim.keymap.set('v', '<leader>x', ':s/.*//<CR>:let @/ = ""<CR>', { noremap = true
 
 -- others
 vim.keymap.set({'n', 'v'}, '`', '~', { noremap = true, silent = true })  -- Toggle case of character under cursor
-
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 --
