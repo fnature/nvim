@@ -1066,6 +1066,19 @@ require('lazy').setup({
       "rcarriga/nvim-notify",
     },
   },
+  {
+      "CJYLZS/nvim-bufsurf",
+      event = { "BufEnter" },
+      config = function()
+          require("nvim-bufsurf").setup()
+          vim.api.nvim_set_keymap("n", "<A-s>", "<CMD>BufsurfBackward<CR>", { silent = true })
+          -- vim.api.nvim_set_keymap("i", "<C-P>", "<CMD>BufsurfBackward<CR>", { silent = true })
+          vim.api.nvim_set_keymap("n", "<A-f>", "<CMD>BufsurfForward<CR>", { silent = true })
+          -- vim.api.nvim_set_keymap("i", "<C-N>", "<CMD>BufsurfForward<CR>", { silent = true })
+          vim.api.nvim_set_keymap("n", "<leader>P", "<CMD>DirsurfBackward<CR>", { silent = true })
+          vim.api.nvim_set_keymap("n", "<leader>N", "<CMD>DirsurfForward<CR>", { silent = true })
+      end,
+  },
   -- I didn't have much success with edgy as it breaks my custom keybindings for window resizing + other bugs ...
   -- {
   --   "folke/edgy.nvim",
@@ -1167,7 +1180,7 @@ vim.keymap.set('n', '<F6>', ':lua vim.cmd("normal! ggvG")<CR>:ToggleTermSendVisu
 vim.keymap.set('n', '<C-a>', 'ggVG<CR>')  -- Select entire file
 vim.keymap.set('i', '<C-a>', '<Esc>ggVG<CR>')  -- Select entire file
 
--- Moves
+------ Moves ------
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -1196,9 +1209,9 @@ vim.keymap.set({'n', 'v'}, '<A-j>', '6j')  -- Move down x lines
 vim.keymap.set({'n', 'v'}, '<A-k>', '6k')  -- Move up x lines
 vim.keymap.set({'n', 'v'}, '<A-h>', '4h')  -- Move up x lines
 vim.keymap.set({'n', 'v'}, '<A-l>', '4l')  -- Move up x lines
-vim.keymap.set('n', '<A-s>', ':bprev<CR>', { noremap = true, silent = true })  -- Switch to previous buffer
--- vim.keymap.set('n', '<A-d>', ':b#<CR>', { noremap = true, silent = true })  -- Switch to last buffer
-vim.keymap.set('n', '<A-f>', ':bnext<CR>', { noremap = true, silent = true })  -- Switch to next buffer
+-- vim.keymap.set('n', '<A-s>', ':bprev<CR>', { noremap = true, silent = true })  -- Switch to previous buffer
+-- -- vim.keymap.set('n', '<A-d>', ':b#<CR>', { noremap = true, silent = true })  -- Switch to last buffer
+-- vim.keymap.set('n', '<A-f>', ':bnext<CR>', { noremap = true, silent = true })  -- Switch to next buffer
 -- vim.keymap.set('n', '<C-`>', 'Neotree close', { noremap = true, silent = true })  -- Close NeoTree
 vim.keymap.set('n', '<A-q>', ':q<CR>', { noremap = true, silent = true }) --quit
 
