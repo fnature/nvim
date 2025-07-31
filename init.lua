@@ -355,8 +355,16 @@ require('lazy').setup({
               ["<C-k>"] = actions.delete_buffer + actions.move_to_top,
             },
           },
+          file_ignore_patterns = {},
+          hidden = true,
         },
-
+        pickers = {
+          live_grep = {
+            additional_args = function()
+              return {"--hidden"} -- allows live_grep to also include hidden files
+            end
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -976,6 +984,8 @@ require('lazy').setup({
       providers = {
         claude = {
           endpoint = "https://api.anthropic.com",
+          -- model = "claude-sonnet-4-20250514",
+          -- model = "claude-3-7-sonnet-latest",
           model = "claude-3-5-sonnet-20241022",
           timeout = 30000,
           extra_request_body = {
@@ -1075,8 +1085,8 @@ require('lazy').setup({
           -- vim.api.nvim_set_keymap("i", "<C-P>", "<CMD>BufsurfBackward<CR>", { silent = true })
           vim.api.nvim_set_keymap("n", "<A-f>", "<CMD>BufsurfForward<CR>", { silent = true })
           -- vim.api.nvim_set_keymap("i", "<C-N>", "<CMD>BufsurfForward<CR>", { silent = true })
-          vim.api.nvim_set_keymap("n", "<leader>P", "<CMD>DirsurfBackward<CR>", { silent = true })
-          vim.api.nvim_set_keymap("n", "<leader>N", "<CMD>DirsurfForward<CR>", { silent = true })
+          vim.api.nvim_set_keymap("n", "<leader>S", "<CMD>DirsurfBackward<CR>", { silent = true })
+          vim.api.nvim_set_keymap("n", "<leader>F", "<CMD>DirsurfForward<CR>", { silent = true })
       end,
   },
   -- I didn't have much success with edgy as it breaks my custom keybindings for window resizing + other bugs ...
@@ -1187,7 +1197,7 @@ vim.keymap.set('i', '<C-a>', '<Esc>ggVG<CR>')  -- Select entire file
 -- is not what someone will guess without a bit more experience.
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set('t', '<A-O>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 --  See `:help wincmd` for a list of all window commands
 
 vim.keymap.set('n', '<A-H>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
@@ -1216,14 +1226,14 @@ vim.keymap.set({'n', 'v'}, '<A-l>', '4l')  -- Move up x lines
 vim.keymap.set('n', '<A-q>', ':q<CR>', { noremap = true, silent = true }) --quit
 
 -- window resizing
-vim.keymap.set("n", "<C-A-h>", "<C-w>9<", { noremap = true, silent = true })
-vim.keymap.set("n", "<A-C-j>", "<C-w>3-", { noremap = true, silent = true })
-vim.keymap.set("n", "<A-C-k>", "<C-w>3+", { noremap = true, silent = true })
-vim.keymap.set("n", "<A-C-l>", "<C-w>9>", { noremap = true, silent = true })
-vim.keymap.set("t", "<C-A-h>", "<C-\\><C-n><C-w>9<", { noremap = true, silent = true })
-vim.keymap.set("t", "<A-C-j>", "<C-\\><C-n><C-w>3-", { noremap = true, silent = true })
-vim.keymap.set("t", "<A-C-k>", "<C-\\><C-n><C-w>3+", { noremap = true, silent = true })
-vim.keymap.set("t", "<A-C-l>", "<C-\\><C-n><C-w>9>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-A-h>", "<C-w>15<", { noremap = true, silent = true })
+vim.keymap.set("n", "<A-C-j>", "<C-w>6-", { noremap = true, silent = true })
+vim.keymap.set("n", "<A-C-k>", "<C-w>6+", { noremap = true, silent = true })
+vim.keymap.set("n", "<A-C-l>", "<C-w>15>", { noremap = true, silent = true })
+vim.keymap.set("t", "<C-A-h>", "<C-\\><C-n><C-w>15<", { noremap = true, silent = true })
+vim.keymap.set("t", "<A-C-j>", "<C-\\><C-n><C-w>6-", { noremap = true, silent = true })
+vim.keymap.set("t", "<A-C-k>", "<C-\\><C-n><C-w>6+", { noremap = true, silent = true })
+vim.keymap.set("t", "<A-C-l>", "<C-\\><C-n><C-w>15>", { noremap = true, silent = true })
 
 -- files
 vim.keymap.set('n', '<A-n>', ":let @+ = expand('%:p')<CR>", { noremap = true })  -- Copy file name
