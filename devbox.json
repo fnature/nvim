@@ -1,0 +1,49 @@
+{
+  "packages": {
+    "fontconfig": "latest",
+    "nodejs": "latest",
+    "ripgrep": "latest",
+    "rustc": "latest",
+    "unzip": "latest",
+    "wl-clipboard": "latest"
+  },
+  "env": {
+    // Corepack ships with Node.js and provides npm, yarn, and pnpm automatically.
+    // This avoids needing "npm" in the package list and ensures versions match Node.js.
+    "DEVBOX_COREPACK_ENABLED": "true",
+
+    // ****************************************************************
+    // ****** On Debian only to fix support for LSP Gitlab-ci-ls ******
+    // Force Rust’s openssl-sys crate NOT to use pkg-config.
+    // Debian splits OpenSSL into multiple .pc files (libssl.pc, libcrypto.pc)
+    // but does NOT provide a global "openssl.pc". That breaks pkg-config.
+    // Setting this tells openssl-sys: "don’t rely on pkg-config".
+    "OPENSSL_NO_PKG_CONFIG": "1",
+
+    // Point Rust to the root of the OpenSSL installation on Debian.
+    // On Debian, headers live under /usr/include/openssl
+    // and libraries under /usr/lib/x86_64-linux-gnu.
+    "OPENSSL_DIR": "/usr",
+
+    // Explicitly tell openssl-sys where to find header files.
+    // Needed because the crate couldn’t locate openssl/opensslconf.h.
+    "OPENSSL_INCLUDE_DIR": "/usr/include",
+
+    // Explicitly tell openssl-sys where to find the OpenSSL libraries (libssl, libcrypto).
+    "OPENSSL_LIB_DIR": "/usr/lib/x86_64-linux-gnu",
+
+    // Extra include flags for gcc/clang during the build.
+    // Debian puts some headers in /usr/include and some in /usr/include/x86_64-linux-gnu.
+    // This makes sure both paths are searched.
+    "CFLAGS": "-I/usr/include -I/usr/include/x86_64-linux-gnu"
+    // ****************************************************************
+  },
+  "shell": {
+    "init_hook": [
+      "echo '🚀 Neovim dev environment ready'",
+    ],
+    "scripts": {
+      "check-nvim-deps": "echo \"🔍 Checking versions...\"; gcc --version | head -n1; node --version; npm --version; rg --version; rustc --version; unzip -v | head -n1; fc-list : family | head -n5; wl-copy --version; go version",
+    },
+  },
+}

@@ -359,7 +359,7 @@ require('lazy').setup({
           hidden = true,
         },
         pickers = {
-          live_grep = {
+live_grep = {
             additional_args = function()
               return {"--hidden"} -- allows live_grep to also include hidden files
             end
@@ -984,9 +984,9 @@ require('lazy').setup({
       providers = {
         claude = {
           endpoint = "https://api.anthropic.com",
-          -- model = "claude-sonnet-4-20250514",
+          model = "claude-sonnet-4-20250514",
           -- model = "claude-3-7-sonnet-latest",
-          model = "claude-3-5-sonnet-20241022",
+          -- model = "claude-3-5-sonnet-20241022",
           timeout = 30000,
           extra_request_body = {
             temperature = 0,
