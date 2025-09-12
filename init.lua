@@ -598,6 +598,19 @@ live_grep = {
             },
           },
         },
+
+        helm_ls = {
+          settings = {
+            ["helm-ls"] = {
+              helmLint = { enabled = true }, -- Note Sept 2025 diagnostics fails
+              yamlls = { enabled= true, path = "yaml-language-server" }, -- Note Sept 2025 diagnostics fails
+            },
+          },
+        },
+
+        yamlls = {
+          filetypes = { "yaml", "yml" }, -- no "helm" here to avoid conflicts
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -615,6 +628,7 @@ live_grep = {
         'stylua', -- Used to format Lua code
         'yaml-language-server',
         'gitlab-ci-ls',
+        'helm-ls',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -632,6 +646,10 @@ live_grep = {
       }
     end,
   },
+
+  -- Helm language server support
+  { "qvalentin/helm-ls.nvim", ft = "helm" },
+
 
   -- { -- Autoformat
   --   'stevearc/conform.nvim',
@@ -1215,8 +1233,8 @@ vim.keymap.set('t', '<A-L>', '<C-\\><C-n><C-w><C-l>', { desc = 'Move focus to th
 vim.keymap.set('t', '<A-J>', '<C-\\><C-n><C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('t', '<A-K>', '<C-\\><C-n><C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-vim.keymap.set({'n', 'v'}, '<A-j>', '6j')  -- Move down x lines
-vim.keymap.set({'n', 'v'}, '<A-k>', '6k')  -- Move up x lines
+vim.keymap.set({'n', 'v'}, '<A-j>', '10j')  -- Move down x lines
+vim.keymap.set({'n', 'v'}, '<A-k>', '10k')  -- Move up x lines
 vim.keymap.set({'n', 'v'}, '<A-h>', '4h')  -- Move up x lines
 vim.keymap.set({'n', 'v'}, '<A-l>', '4l')  -- Move up x lines
 -- vim.keymap.set('n', '<A-s>', ':bprev<CR>', { noremap = true, silent = true })  -- Switch to previous buffer
