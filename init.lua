@@ -561,6 +561,9 @@ live_grep = {
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
+
+
+
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --
@@ -571,6 +574,7 @@ live_grep = {
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+        gitlab_ci_ls = {},
         -- clangd = {},
         -- gopls = {},
         pyright = {},
@@ -621,14 +625,11 @@ live_grep = {
       --  You can press `g?` for help in this menu.
       require('mason').setup()
 
-      -- You can add other tools here that you want Mason to install
+      -- You can add other tools here that you want Mason to install ( non LSP )
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
-        'yaml-language-server',
-        'gitlab-ci-ls',
-        'helm-ls',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
