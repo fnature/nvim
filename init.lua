@@ -1272,6 +1272,7 @@ vim.keymap.set('i', '<A-d>', '<Esc>"_dd', { noremap = true, silent = true })  --
 vim.keymap.set('v', '<A-d>', '"_d', { noremap = true, silent = true })  -- Delete lines without copying to clipboard
 vim.keymap.set('n', '<leader>x', '0vg_d', { noremap = true, silent = true }) -- Clear the line without deleting it
 vim.keymap.set('v', '<leader>x', ':s/.*//<CR>:let @/ = ""<CR>', { noremap = true, silent = true }) -- Clear the selection without deleting the lines
+vim.keymap.set('n', '<A-v>', '^vg_', { noremap = true, silent = true })  -- Select the whole line without the new line
 
 -- others
 vim.keymap.set({'n', 'v'}, '`', '~', { noremap = true, silent = true })  -- Toggle case of character under cursor
