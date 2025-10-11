@@ -15,7 +15,7 @@ return {
   },
   opts = {
     filesystem = {
-      follow_current_file = true, -- Automatically focus the current file
+      follow_current_file = { enabled = true,}, -- Automatically focus the current file
       use_libuv_file_watcher = true, -- Neo-tree does not need to be manually refreshed 
       hijack_netrw = true, -- Use Neo-tree for directory browsing instead of NetRW
       window = {

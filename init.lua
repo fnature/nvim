@@ -1,3 +1,5 @@
+--
+--
 --[[
 
 =====================================================================
@@ -546,11 +548,21 @@ live_grep = {
         end,
       })
 
+      -- When the LSP client detaches from a buffer, clean up everything it set up:
+      -- 1. Clear any highlighted references left by the LSP.
+      -- 2. Safely remove highlight-related autocmds for this buffer (if they exist),
+      --    so no leftover events keep running after the LSP is gone.
       vim.api.nvim_create_autocmd('LspDetach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
         callback = function(event)
           vim.lsp.buf.clear_references()
-          vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event.buf }
+          -- Check if the highlight group exists before trying to clear it
+          local ok, _ = pcall(vim.api.nvim_clear_autocmds, { group = 'kickstart-lsp-highlight', buffer = event.buf })
+          if not ok then
+             -- If the group doesn't exist, just clear any autocmds for this buffer
+             pcall(vim.api.nvim_clear_autocmds, { buffer = event.buf, pattern = { 'CursorHold', 'CursorHoldI', 'CursorMoved', 'CursorMovedI' } })
+          end
+
         end,
       })
 
@@ -1013,10 +1025,26 @@ live_grep = {
           },
         },
       },
-
-    },
-    behaviour = {
-      enable_claude_text_editor_tool_mode = true,
+      behaviour = {
+        auto_suggestions = false, -- Experimental stage
+        auto_set_highlight_group = true,
+        auto_set_keymaps = true,
+        auto_apply_diff_after_generation = false,
+        support_paste_from_clipboard = false,
+        minimize_diff = true, -- Whether to remove unchanged lines when applying a code block
+        enable_token_counting = true, -- Whether to enable token counting. Default to true.
+        auto_approve_tool_permissions = false, -- Default: show permission prompts for all tools
+        -- Examples:
+        -- auto_approve_tool_permissions = true,                -- Auto-approve all tools (no prompts)
+        -- auto_approve_tool_permissions = {"bash", "replace_in_file"}, -- Auto-approve specific tools only
+      },
+      highlights = {
+        ---@type AvanteConflictHighlights
+        diff = {
+          current = "DiffText",
+          incoming = "DiffAdd",
+        },
+      },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true` build = "make", build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
     dependencies = {
@@ -1108,6 +1136,31 @@ live_grep = {
           vim.api.nvim_set_keymap("n", "<leader>F", "<CMD>DirsurfForward<CR>", { silent = true })
       end,
   },
+  {
+    'rmagatti/auto-session',
+    config = function()
+      require('auto-session').setup {
+        log_level = 'error',
+        auto_session_suppress_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
+        auto_session_use_git_branch = false,
+
+        -- Session lens configuration for telescope integration
+        session_lens = {
+          -- If load_on_setup is set to false, one needs to eventually call `require("auto-session").setup_session_lens()` if they want to use session-lens.
+          buftypes_to_ignore = {}, -- list of buffer types what should not be deleted from current session
+          load_on_setup = true,
+          theme_conf = { border = true },
+          previewer = false,
+        },
+      }
+
+      -- Set keymaps for session management
+      vim.keymap.set('n', '<leader>wr', '<cmd>SessionRestore<CR>', { desc = '[W]orkspace [R]estore session' })
+      vim.keymap.set('n', '<leader>ws', '<cmd>SessionSave<CR>', { desc = '[W]orkspace [S]ave session' })
+      vim.keymap.set('n', '<leader>wa', '<cmd>SessionSearch<CR>', { desc = '[W]orkspace [A]ll sessions' })
+      vim.keymap.set('n', '<leader>wd', '<cmd>SessionDelete<CR>', { desc = '[W]orkspace [D]elete session' })
+    end,
+  },
   -- I didn't have much success with edgy as it breaks my custom keybindings for window resizing + other bugs ...
   -- {
   --   "folke/edgy.nvim",
@@ -1168,13 +1221,73 @@ live_grep = {
       lazy = '💤 ',
     },
   },
+  -- Disable LuaRocks and Hererocks.
+  -- Lazy.nvim tries to install Lua packages via these tools, but most plugins don’t need them.
+  -- Prevents startup errors like “hererocks Lua 5.1 not installed”.
+  rocks = {
+    enabled = false,
+    hererocks = false,
+  },
 })
 
 -- Set the neovim theme 
-vim.cmd.colorscheme 'dayfox'
+vim.cmd.colorscheme 'nightfox'
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
+
+-- Popup and notification management
+vim.keymap.set('n', '<A-x>', function()
+  -- Close all floating windows
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local config = vim.api.nvim_win_get_config(win)
+    if config.relative ~= '' then  -- floating window
+      vim.api.nvim_win_close(win, false)
+    end
+  end
+  -- Clear command line and search highlighting
+  vim.cmd('nohlsearch')
+  vim.cmd('echo ""')
+  -- Dismiss notifications if using nvim-notify
+  if pcall(require, 'notify') then
+    require('notify').dismiss({ silent = true, pending = true })
+  end
+end, { desc = 'Close all popups and notifications' })
+
+-- Quick escape from any popup/floating window
+vim.keymap.set('n', '<C-c>', function()
+  -- Try to close current floating window first
+  local current_win = vim.api.nvim_get_current_win()
+  local config = vim.api.nvim_win_get_config(current_win)
+  if config.relative ~= '' then
+    vim.api.nvim_win_close(current_win, false)
+  else
+    -- If not in floating window, clear search and command line
+    vim.cmd('nohlsearch')
+    vim.cmd('echo ""')
+  end
+end, { desc = 'Quick escape from popups' })
+
+-- Toggle diagnostics on/off
+vim.keymap.set('n', '<leader>td', function()
+  vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+  local status = vim.diagnostic.is_enabled() and "enabled" or "disabled"
+  print("Diagnostics " .. status)
+end, { desc = '[T]oggle [D]iagnostics' })
+
+-- Close LSP diagnostic floating windows specifically
+vim.keymap.set('n', '<leader>cd', function()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    local buf_name = vim.api.nvim_buf_get_name(buf)
+    if buf_name:match("diagnostic") or vim.api.nvim_buf_get_option(buf, 'buftype') == 'nofile' then
+      local config = vim.api.nvim_win_get_config(win)
+      if config.relative ~= '' then
+        vim.api.nvim_win_close(win, false)
+      end
+    end
+  end
+end, { desc = '[C]lose [D]iagnostic popups' })
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
@@ -1236,8 +1349,8 @@ vim.keymap.set('t', '<A-K>', '<C-\\><C-n><C-w><C-k>', { desc = 'Move focus to th
 
 vim.keymap.set({'n', 'v'}, '<A-j>', '10j')  -- Move down x lines
 vim.keymap.set({'n', 'v'}, '<A-k>', '10k')  -- Move up x lines
-vim.keymap.set({'n', 'v'}, '<A-h>', '4h')  -- Move up x lines
-vim.keymap.set({'n', 'v'}, '<A-l>', '4l')  -- Move up x lines
+vim.keymap.set({'n', 'v'}, '<A-h>', '6h')  -- Move left x caracters
+vim.keymap.set({'n', 'v'}, '<A-l>', '6l')  -- Move right x caracters
 -- vim.keymap.set('n', '<A-s>', ':bprev<CR>', { noremap = true, silent = true })  -- Switch to previous buffer
 -- -- vim.keymap.set('n', '<A-d>', ':b#<CR>', { noremap = true, silent = true })  -- Switch to last buffer
 -- vim.keymap.set('n', '<A-f>', ':bnext<CR>', { noremap = true, silent = true })  -- Switch to next buffer
@@ -1276,6 +1389,30 @@ vim.keymap.set('n', '<A-v>', '^vg_', { noremap = true, silent = true })  -- Sele
 
 -- others
 vim.keymap.set({'n', 'v'}, '`', '~', { noremap = true, silent = true })  -- Toggle case of character under cursor
+
+-- NOT WORKING YET !!!
+-- Function to recursively expand all directories in Neo-tree
+-- local function expand_all_nodes()
+--   local state = require("neo-tree.sources.manager").get_state("filesystem")
+--   if not state then return end
+--
+--   local function expand(node)
+--     if node.type == "directory" then
+--       require("neo-tree.sources.filesystem").expand_node(state, node)
+--       if node.children then
+--         for _, child in ipairs(node.children) do
+--           expand(child)
+--         end
+--       end
+--     end
+--   end
+--
+--   expand(state.tree)
+-- end
+--
+-- -- Optional: Map the function to a keybinding for convenience
+-- vim.keymap.set('n', 'e', expand_all_nodes, { desc = "Expand all folders in Neo-tree" })
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 --
