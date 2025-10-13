@@ -548,10 +548,10 @@ live_grep = {
         end,
       })
 
-      -- When the LSP client detaches from a buffer, clean up everything it set up:
-      -- 1. Clear any highlighted references left by the LSP.
-      -- 2. Safely remove highlight-related autocmds for this buffer (if they exist),
-      --    so no leftover events keep running after the LSP is gone.
+    -- When the LSP client detaches from a buffer, clean up everything it set up:
+    -- 1. Clear any highlighted references left by the LSP.
+    -- 2. Safely remove highlight-related autocmds for this buffer (if they exist),
+    --    so no leftover events keep running after the LSP is gone.
       vim.api.nvim_create_autocmd('LspDetach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
         callback = function(event)
@@ -1373,13 +1373,23 @@ vim.keymap.set('n', '<C-s>', ':w<CR>')  -- Save file
 vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>')  -- Save file
 
 -- copy paste
+-- Use black-hole for destructive operations so they won't overwrite useful registers
+-- Apply in normal, visual and operator-pending modes so motions like d, c, etc behave
+vim.keymap.set({ 'n','v','o' }, 'c', '"_c', { noremap = true, silent = true })
+vim.keymap.set({ 'n','v','o' }, 'x', '"_x', { noremap = true, silent = true })
+
+vim.keymap.set('v', 'p', '"_c<C-R>"<Esc>', { noremap = true, silent = true })  -- allows to paste multiple time same content because what is deleted isn't saved, ie it sent to "_ which is the black hole register
+vim.keymap.set({ 'n','v','o' }, '<A-p>', '"_ciw<C-R>"<Esc>', { noremap = true, silent = true }) -- Alt+p: ciw then paste unnamed register, then go back to normal mode
+vim.keymap.set({ 'n','v','o' }, '<A-P>', '"_ciW<C-R>"<Esc>', { noremap = true, silent = true }) -- Alt+p: ciw then paste unnamed register, then go back to normal mode
+
 -- vim.keymap.set('v', 'p', '"_c<Esc>p', { noremap = true, silent = true })  -- allows to select and paste + override and keep the selection in clipboard
-vim.keymap.set('v', 'p', '"_dP', { noremap = true, silent = true })  -- allows to paste multiple time same content because what is deleted isn't saved, ie it sent to "_ which is the black hole register
-vim.keymap.set('v', '<A-p>', '"0p', { noremap = true, silent = true })  -- allows to paste multiple times same register 0
-vim.keymap.set("n", "<A-o>", ":put =''<CR>k", { noremap = true, silent = true }) -- add empty lines below cursor
-vim.keymap.set('n', '<A-p>', 'viwp<CR>', { noremap = true, silent = true })  -- Paste and override word on cursor
+
+
+-- vim.keymap.set('n', '<A-p>', 'viw"_dP', { noremap = true, silent = true })  -- Paste and override word on cursor
+-- vim.keymap.set('n', '<A-p>', '"_ciw"_dP', { noremap = true, silent = true })
 
 -- lines
+vim.keymap.set("n", "<A-o>", ":put =''<CR>k", { noremap = true, silent = true }) -- add empty lines below cursor
 vim.keymap.set('n', '<A-d>', '"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
 vim.keymap.set('i', '<A-d>', '<Esc>"_dd', { noremap = true, silent = true })  -- Delete line without copying to clipboard
 vim.keymap.set('v', '<A-d>', '"_d', { noremap = true, silent = true })  -- Delete lines without copying to clipboard
