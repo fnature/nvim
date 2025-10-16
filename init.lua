@@ -1378,10 +1378,13 @@ vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>')  -- Save file
 vim.keymap.set({ 'n','v','o' }, 'c', '"_c', { noremap = true, silent = true })
 vim.keymap.set({ 'n','v','o' }, 'x', '"_x', { noremap = true, silent = true })
 
-vim.keymap.set('v', 'p', '"_c<C-R>"<Esc>', { noremap = true, silent = true })  -- allows to paste multiple time same content because what is deleted isn't saved, ie it sent to "_ which is the black hole register
+vim.keymap.set('v', 'p', '"_xP', { noremap = true, silent = true })  -- allows to paste multiple time same content because what is deleted isn't saved, ie it sent to "_ which is the black hole register
 vim.keymap.set({ 'n','v','o' }, '<A-p>', '"_ciw<C-R>"<Esc>', { noremap = true, silent = true }) -- Alt+p: ciw then paste unnamed register, then go back to normal mode
 vim.keymap.set({ 'n','v','o' }, '<A-P>', '"_ciW<C-R>"<Esc>', { noremap = true, silent = true }) -- Alt+p: ciw then paste unnamed register, then go back to normal mode
 
+-- vim.keymap.set('v', 'p', '"_c<Esc>p', { noremap = true, silent = true })  -- allows to paste multiple time same content because what is deleted isn't saved, ie it sent to "_ which is the black hole register
+-- vim.keymap.set({ 'n','v','o' }, '<A-p>', '"_ciw<Esc>p', { noremap = true, silent = true }) -- Alt+p: ciw then paste unnamed register, then go back to normal mode
+-- vim.keymap.set({ 'n','v','o' }, '<A-P>', '"_ciW<Esc>p', { noremap = true, silent = true }) -- Alt+p: ciw then paste unnamed register, then go back to normal mode
 -- vim.keymap.set('v', 'p', '"_c<Esc>p', { noremap = true, silent = true })  -- allows to select and paste + override and keep the selection in clipboard
 
 
