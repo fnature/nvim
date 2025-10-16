@@ -1378,7 +1378,11 @@ vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>')  -- Save file
 vim.keymap.set({ 'n','v','o' }, 'c', '"_c', { noremap = true, silent = true })
 vim.keymap.set({ 'n','v','o' }, 'x', '"_x', { noremap = true, silent = true })
 
-vim.keymap.set({ 'n','v','o' }, 'p', 'pgvy', { noremap = true, silent = true }) -- allows to paste multiple time same content
+vim.keymap.set({ 'n','v','o' }, 'p', 'pgvy', { noremap = true, silent = true }) -- allows to paste multiple time same content BUT DOESN'T WORK FOR dd AND yy
+vim.keymap.set({ 'n','v','o' }, 'P', 'Pgvy', { noremap = true, silent = true }) -- allows to paste multiple time same content BUT DOESN'T WORK FOR dd AND yy
+vim.keymap.set('n', '<C-p>', 'p', { noremap = true, silent = true }) -- normal p, works for after dd and yy
+vim.keymap.set('x', '<A-p>', '"_dP', { noremap = true, silent = true }) -- to override selected lines and paste multiple times
+vim.keymap.set('x', '<A-P>', '"_dp', { noremap = true, silent = true }) -- to override selected lines and paste multiple times at the end of a document
 vim.keymap.set('n', '<A-p>', 'viwpgvy', { noremap = true, silent = true }) -- Alt+p: ciw then paste unnamed register, then go back to normal mode
 vim.keymap.set('n', '<A-P>', 'viWpgvy', { noremap = true, silent = true }) -- Alt+p: ciw then paste unnamed register, then go back to normal mode
 
