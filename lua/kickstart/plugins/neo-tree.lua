@@ -29,7 +29,7 @@ return {
 
           inputs.confirm("Trash " .. path .. " ?", function(confirmed)
             if not confirmed then return end
-            vim.fn.system({ "gio", "trash", path })
+            vim.fn.system({ "gio", "trash", path }) -- tested on Debian, you may need other CLI trash command on other systems
             require("neo-tree.sources.manager").refresh(state.name)
           end)
         end,
@@ -43,7 +43,7 @@ return {
             if not confirmed then return end
             for _, node in ipairs(selected_nodes) do
               local path = node.path or node:get_id()
-              vim.fn.system({ "gio", "trash", path })
+              vim.fn.system({ "gio", "trash", path }) -- tested on Debian, you may need other CLI trash command on other systems
             end
             require("neo-tree.sources.manager").refresh(state.name)
           end)
