@@ -18,6 +18,38 @@ return {
       follow_current_file = { enabled = true,}, -- Automatically focus the current file
       use_libuv_file_watcher = true, -- Neo-tree does not need to be manually refreshed 
       hijack_netrw = true, -- Use Neo-tree for directory browsing instead of NetRW
+
+      -- ✅ override built-in commands here
+      commands = {
+        -- over write default 'delete' command to 'trash'.
+        delete = function(state)
+          local inputs = require("neo-tree.ui.inputs")
+          local node = state.tree:get_node()
+          local path = node.path or node:get_id()
+
+          inputs.confirm("Trash " .. path .. " ?", function(confirmed)
+            if not confirmed then return end
+            vim.fn.system({ "gio", "trash", path })
+            require("neo-tree.sources.manager").refresh(state.name)
+          end)
+        end,
+
+        -- over write default 'delete_visual' command to 'trash'.
+        delete_visual = function(state, selected_nodes)
+          local inputs = require("neo-tree.ui.inputs")
+          local count = #selected_nodes
+
+          inputs.confirm("Trash " .. count .. " item(s) ?", function(confirmed)
+            if not confirmed then return end
+            for _, node in ipairs(selected_nodes) do
+              local path = node.path or node:get_id()
+              vim.fn.system({ "gio", "trash", path })
+            end
+            require("neo-tree.sources.manager").refresh(state.name)
+          end)
+        end,
+       },
+
       window = {
         mappings = {
           ['<A-w>'] = 'close_window',

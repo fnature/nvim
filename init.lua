@@ -1015,8 +1015,8 @@ live_grep = {
       providers = {
         claude = {
           endpoint = "https://api.anthropic.com",
-          model = "claude-sonnet-4-20250514",
-          -- model = "claude-3-7-sonnet-latest",
+          -- model = "claude-sonnet-4-20250514",
+          model = "claude-3-7-sonnet-latest",
           -- model = "claude-3-5-sonnet-20241022",
           timeout = 30000,
           extra_request_body = {
@@ -1347,8 +1347,8 @@ vim.keymap.set('t', '<A-L>', '<C-\\><C-n><C-w><C-l>', { desc = 'Move focus to th
 vim.keymap.set('t', '<A-J>', '<C-\\><C-n><C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('t', '<A-K>', '<C-\\><C-n><C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-vim.keymap.set({'n', 'v'}, '<A-j>', '10j')  -- Move down x lines
-vim.keymap.set({'n', 'v'}, '<A-k>', '10k')  -- Move up x lines
+vim.keymap.set({'n', 'v'}, '<A-j>', '6j')  -- Move down x lines
+vim.keymap.set({'n', 'v'}, '<A-k>', '6k')  -- Move up x lines
 vim.keymap.set({'n', 'v'}, '<A-h>', '6h')  -- Move left x caracters
 vim.keymap.set({'n', 'v'}, '<A-l>', '6l')  -- Move right x caracters
 -- vim.keymap.set('n', '<A-s>', ':bprev<CR>', { noremap = true, silent = true })  -- Switch to previous buffer
@@ -1378,8 +1378,8 @@ vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>')  -- Save file
 vim.keymap.set({ 'n','v','o' }, 'c', '"_c', { noremap = true, silent = true })
 vim.keymap.set({ 'n','v','o' }, 'x', '"_x', { noremap = true, silent = true })
 
-vim.keymap.set({ 'n','v','o' }, 'p', 'pgvy', { noremap = true, silent = true }) -- allows to paste multiple time same content BUT DOESN'T WORK FOR dd AND yy
-vim.keymap.set({ 'n','v','o' }, 'P', 'Pgvy', { noremap = true, silent = true }) -- allows to paste multiple time same content BUT DOESN'T WORK FOR dd AND yy
+vim.keymap.set('v', 'p', 'pgvy', { noremap = true, silent = true }) -- allows to paste multiple time same content BUT DOESN'T WORK FOR dd AND yy
+vim.keymap.set('v', 'P', 'Pgvy', { noremap = true, silent = true }) -- allows to paste multiple time same content BUT DOESN'T WORK FOR dd AND yy
 vim.keymap.set('n', '<C-p>', 'p', { noremap = true, silent = true }) -- normal p, works for after dd and yy
 vim.keymap.set('x', '<A-p>', '"_dP', { noremap = true, silent = true }) -- to override selected lines and paste multiple times
 vim.keymap.set('x', '<A-P>', '"_dp', { noremap = true, silent = true }) -- to override selected lines and paste multiple times at the end of a document
