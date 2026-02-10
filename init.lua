@@ -1011,21 +1011,33 @@ live_grep = {
       -- for example
       provider = "claude",
 
+      mode = "legacy", -- "agentic" | "legacy" -- ✅ reduces multi-step / tool-loop request bursts
+      dual_boost = { enabled = false }, -- ✅ avoid any accidental 2x/3x generation modes
+
       -- New providers table
       providers = {
         claude = {
           endpoint = "https://api.anthropic.com",
+           model = "claude-sonnet-4-5",-- ✅  NOTE: 10 feb 2026 :share limit with claude sonnet active  and can use much more input tokens per minute than 3.7
           -- model = "claude-sonnet-4-20250514",
-          model = "claude-3-7-sonnet-latest",
+          -- model = "claude-3-7-sonnet-latest",
           -- model = "claude-3-5-sonnet-20241022",
           timeout = 30000,
+
+        -- ✅ keep tools available, but ban the ones that commonly cause extra roundtrips
+        -- (Avante supports both disable_tools=true and disabled_tools={...})
+        -- disabled_tools = { "web_search", "rag_search", "python", "bash" },
+
           extra_request_body = {
             temperature = 0,
-            max_tokens = 4096,
+            max_tokens = 4096, -- ✅ lower = fewer TPM hits; raise later if you really need big outputs
           },
         },
       },
       behaviour = {
+
+        auto_add_current_file = false, -- ✅ reduces prompt size by default
+
         auto_suggestions = false, -- Experimental stage
         auto_set_highlight_group = true,
         auto_set_keymaps = true,
