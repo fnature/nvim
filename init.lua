@@ -996,9 +996,15 @@ live_grep = {
     config = function()
       -- Set ripgrep as the default search tool
       vim.g.ctrlsf_default_search_tool = 'rg'
+
+      -- Auto-focus results
       vim.g.ctrlsf_auto_focus = {
         at = "done",
         duration_less_than = 1000
+      }
+      -- Sort results alphabetically by full file path
+      vim.g.ctrlsf_extra_backend_args = {
+        rg = "--sort path",
       }
     end
   },
