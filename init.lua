@@ -904,7 +904,19 @@ live_grep = {
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     end,
   },
-
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    event = 'VeryLazy',
+    opts = {
+      max_lines = 5,      -- how many context lines to show
+      -- min_window_height = 0, --   Show context even in very small windows.
+      -- multiline_threshold = 20, -- Controls when long context is compacted/truncated.
+      mode = 'cursor',
+      -- cursor: Context follows where your cursor is
+      -- topline: The pinned block is based on the code at the top of the visible window.
+      trim_scope = 'outer',  -- Keeps the nearest useful scope, trimming outer ones first.
+    },
+  },
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
