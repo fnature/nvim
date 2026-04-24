@@ -57,6 +57,8 @@ return {
       },
       filtered_items = {
         hide_dotfiles = false,  -- Set this to false to show files starting with "."
+        hide_gitignored = false, -- shows gitignored files
+        visible = true, -- shows them differently
       },
     },
   },
