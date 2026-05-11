@@ -1027,13 +1027,23 @@ live_grep = {
     opts = {
       -- add any opts here
       -- for example
-      provider = "claude",
+      provider = "mistral",
 
-      mode = "legacy", -- "agentic" | "legacy" -- ✅ reduces multi-step / tool-loop request bursts
+      mode = "agentic", -- "agentic" | "legacy" -- ✅ reduces multi-step / tool-loop request bursts
       dual_boost = { enabled = false }, -- ✅ avoid any accidental 2x/3x generation modes
 
       -- New providers table
       providers = {
+        mistral = {
+          endpoint = "https://api.mistral.ai/v1",
+          model = "mistral-large-latest", -- or your preferred model
+          api_key = os.getenv("MISTRAL_API_KEY"), -- or directly your key (not recommended)
+          extra_request_body = {
+            temperature = 0,
+            max_tokens = 4096,
+          },
+          timeout = 30000,
+        },
         claude = {
           endpoint = "https://api.anthropic.com",
            model = "claude-sonnet-4-5",-- ✅  NOTE: 10 feb 2026 :share limit with claude sonnet active  and can use much more input tokens per minute than 3.7
