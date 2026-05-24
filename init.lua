@@ -1021,13 +1021,14 @@ live_grep = {
     end
   },
   {
-    "yetone/avante.nvim",
+    "yetone/avante.nvim", -- https://github.com/yetone/avante.nvim
     event = "VeryLazy",
     version = false, -- Never set this value to "*"! Never!
+    build = "make",
     opts = {
       -- add any opts here
       -- for example
-      provider = "mistral",
+      provider = "claude",
 
       mode = "agentic", -- "agentic" | "legacy" -- ✅ reduces multi-step / tool-loop request bursts
       dual_boost = { enabled = false }, -- ✅ avoid any accidental 2x/3x generation modes
@@ -1038,6 +1039,7 @@ live_grep = {
           endpoint = "https://api.mistral.ai/v1",
           model = "mistral-large-latest", -- or your preferred model
           api_key = os.getenv("MISTRAL_API_KEY"), -- or directly your key (not recommended)
+          use_ReAct_prompt = true, -- attempt to fix isues of May 22, mistral and avante not working anymore it seems...
           extra_request_body = {
             temperature = 0,
             max_tokens = 4096,
