@@ -291,6 +291,74 @@ require('lazy').setup({
   --
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
 
+  {
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    keys = {
+      {
+        '<A-a>',
+        function()
+          require('harpoon'):list():add()
+        end,
+        desc = 'Harpoon [A]dd file',
+      },
+      {
+        '<A-m>',
+        function()
+          local harpoon = require 'harpoon'
+          harpoon.ui:toggle_quick_menu(harpoon:list())
+        end,
+        desc = 'Harpoon [M]enu',
+      },
+      {
+        '<A-,>',
+        function()
+          require('harpoon'):list():prev()
+        end,
+        desc = 'Harpoon [P]revious',
+      },
+      {
+        '<A-.>',
+        function()
+          require('harpoon'):list():next()
+        end,
+        desc = 'Harpoon [N]ext',
+      },
+      {
+        '<A-1>',
+        function()
+          require('harpoon'):list():select(1)
+        end,
+        desc = 'Harpoon file 1',
+      },
+      {
+        '<A-2>',
+        function()
+          require('harpoon'):list():select(2)
+        end,
+        desc = 'Harpoon file 2',
+      },
+      {
+        '<A-3>',
+        function()
+          require('harpoon'):list():select(3)
+        end,
+        desc = 'Harpoon file 3',
+      },
+      {
+        '<A-4>',
+        function()
+          require('harpoon'):list():select(4)
+        end,
+        desc = 'Harpoon file 4',
+      },
+    },
+    config = function()
+      require('harpoon'):setup()
+    end,
+  },
+
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
@@ -1302,7 +1370,7 @@ live_grep = {
   },
 })
 
--- Set the neovim theme 
+-- Set the neovim theme
 vim.cmd.colorscheme 'nightfox'
 
 -- [[ Basic Keymaps ]]

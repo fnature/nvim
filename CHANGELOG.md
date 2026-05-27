@@ -2,6 +2,9 @@
 
 ## 2026-05-27
 
+- Added Harpoon 2 for fast project file marks with direct `Alt` keymaps:
+  add current file, open the Harpoon menu, move previous/next, and jump to
+  marks 1 through 4.
 - Fixed markdown files crashing during Tree-sitter parsing after updating Neovim
   and Lazy plugins.
 - Added the `markdown_inline` Tree-sitter parser, which is required by
