@@ -964,6 +964,7 @@ live_grep = {
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
 
+      ------------------------- WORKAROUNDS PATCHES !! -----------------------------
       -- Work around a Neovim/nvim-treesitter mismatch where the markdown
       -- `set-lang-from-info-string!` injection directive crashes on fenced code.
       vim.treesitter.query.set('markdown', 'injections', [[
@@ -994,6 +995,87 @@ live_grep = {
           (#set! injection.language "markdown_inline"))
       ]])
 
+      -- The upstream bash injection query treats heredoc delimiters such as
+      -- EOF as language names. On Neovim 0.12 this can crash ranged parses used
+      -- by nvim-treesitter-context when opening shell scripts with heredocs.
+      vim.treesitter.query.set('bash', 'injections', [[
+        ((comment) @injection.content
+          (#set! injection.language "comment"))
+
+        ((regex) @injection.content
+          (#set! injection.language "regex"))
+
+        ; printf 'format'
+        ((command
+          name: (command_name) @_command
+          .
+          argument: [
+            (string) @injection.content
+            (concatenation
+              (string) @injection.content)
+            (raw_string) @injection.content
+            (concatenation
+              (raw_string) @injection.content)
+          ])
+          (#eq? @_command "printf")
+          (#offset! @injection.content 0 1 0 -1)
+          (#set! injection.include-children)
+          (#set! injection.language "printf"))
+
+        ; printf -v var 'format'
+        ((command
+          name: (command_name) @_command
+          argument: (word) @_arg
+          .
+          (_)
+          .
+          argument: [
+            (string) @injection.content
+            (concatenation
+              (string) @injection.content)
+            (raw_string) @injection.content
+            (concatenation
+              (raw_string) @injection.content)
+          ])
+          (#eq? @_command "printf")
+          (#eq? @_arg "-v")
+          (#offset! @injection.content 0 1 0 -1)
+          (#set! injection.include-children)
+          (#set! injection.language "printf"))
+
+        ; printf -- 'format'
+        ((command
+          name: (command_name) @_command
+          argument: (word) @_arg
+          .
+          argument: [
+            (string) @injection.content
+            (concatenation
+              (string) @injection.content)
+            (raw_string) @injection.content
+            (concatenation
+              (raw_string) @injection.content)
+          ])
+          (#eq? @_command "printf")
+          (#eq? @_arg "--")
+          (#offset! @injection.content 0 1 0 -1)
+          (#set! injection.include-children)
+          (#set! injection.language "printf"))
+
+        ((command
+          name: (command_name) @_command
+          .
+          argument: [
+            (string)
+            (raw_string)
+          ] @injection.content)
+          (#eq? @_command "bind")
+          (#offset! @injection.content 0 1 0 -1)
+          (#set! injection.include-children)
+          (#set! injection.language "readline"))
+      ]])
+      ------------------------- WORKAROUNDS PATCHES !! -----------------------------
+
       -- There are additional nvim-treesitter modules that you can use to interact
       -- with nvim-treesitter. You should go explore a few and see what interests you:
       --
@@ -1006,7 +1088,7 @@ live_grep = {
     'nvim-treesitter/nvim-treesitter-context',
     event = 'VeryLazy',
     opts = {
-      max_lines = 5,      -- how many context lines to show
+      max_lines = 15,      -- how many context lines to show
       -- min_window_height = 0, --   Show context even in very small windows.
       -- multiline_threshold = 20, -- Controls when long context is compacted/truncated.
       mode = 'cursor',
