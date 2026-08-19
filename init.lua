@@ -454,7 +454,36 @@ live_grep = {
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+      vim.keymap.set('n', '<leader>se', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+
+      -- vim.keymap.set('n', '<leader>sd', function()
+      --   builtin.find_files {
+      --     prompt_title = 'Search Directories',
+      --
+      --     find_command = {
+      --       'fd',
+      --       '--type', 'd',
+      --       '--hidden',
+      --       '--exclude', '.git',
+      --     },
+      --
+      --     attach_mappings = function(prompt_bufnr)
+      --       local actions = require 'telescope.actions'
+      --       local action_state = require 'telescope.actions.state'
+      --
+      --       actions.select_default:replace(function()
+      --         local selection = action_state.get_selected_entry()
+      --         actions.close(prompt_bufnr)
+      --
+      --         local dir = vim.fn.fnamemodify(selection.path or selection[1], ':p')
+      --         MiniFiles.open(dir)
+      --       end)
+      --
+      --       return true
+      --     end,
+      --   }
+      -- end, { desc = '[S]earch [D]irectories' })
+
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
