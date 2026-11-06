@@ -1,5 +1,33 @@
 # Changelog
 
+## 2026-11-06
+
+- Added Markdown-only `Space m v` image pasting with `img-clip.nvim`: clipboard
+  images are saved beside the document in `images/` with relative links and
+  collision-resistant filenames, without changing ordinary paste behavior.
+
+- Switched automatic wrapped tables from a separate Reader to inline replacement
+  in the source buffer, preserving Snacks images and the normal Feline status bar.
+- Kept all tables rendered outside the cursor's table and documented the temporary
+  native-wrap override used to avoid long source rows leaking through overlays.
+
+- Fixed Neo-tree's `Alt+w` reveal from Markdown table Reader/Float views to use
+  the backing source file, avoiding bogus working-directory-change prompts.
+
+- Added `markdown-table-wrap.nvim` (stable 1.x) for source-safe wrapped Markdown
+  tables, automatic Reader view, and Markdown-only `Space m r/i/f` shortcuts.
+- Disabled the competing `render-markdown.nvim` pipe-table renderer only for
+  Markdown, preserving its other styling and Avante table support.
+
+- Enabled Snacks image support for inline local images in Markdown when using
+  Kitty or another compatible terminal, retaining the existing Markdown renderer.
+- Added a Markdown image demo and Kitty setup/troubleshooting notes.
+
+- Added `iamcco/markdown-preview.nvim` for live Markdown previews in the browser,
+  with automatic prebuilt-server installation through lazy.nvim.
+- Added Markdown-only normal-mode mappings: `Space m p` toggles the preview and
+  `Space m s` stops it, without replacing existing shortcuts.
+
 ## 2026-05-27
 
 - Added Harpoon 2 for fast project file marks with direct `Alt` keymaps:

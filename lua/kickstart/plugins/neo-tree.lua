@@ -11,7 +11,26 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '<A-w>', ':Neotree reveal<CR>', { desc = 'NeoTree reveal' } },
+    {
+      '<A-w>',
+      function()
+        local table_wrap = package.loaded['markdown-table-wrap']
+        local source = table_wrap and table_wrap.resolve_source_buffer(0)
+        if source and source ~= vim.api.nvim_get_current_buf() then
+          -- Reader/Float names are virtual URIs, not filesystem paths.
+          local path = vim.api.nvim_buf_get_name(source)
+          require('neo-tree.command').execute {
+            action = 'focus',
+            source = 'filesystem',
+            reveal = false, -- Do not fall back to the virtual name for unnamed source.
+            reveal_file = path ~= '' and path or nil,
+          }
+        else
+          vim.cmd 'Neotree reveal'
+        end
+      end,
+      desc = 'NeoTree reveal',
+    },
   },
   opts = {
     filesystem = {

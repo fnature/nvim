@@ -2,6 +2,111 @@
 
 ## My custom notes
 
+### Markdown preview
+
+Open a Markdown file and use these normal-mode shortcuts (`<leader>` is Space):
+
+| Shortcut | Action |
+| --- | --- |
+| `Space m p` | Toggle the live browser preview |
+| `Space m s` | Stop the preview |
+
+The shortcuts are buffer-local to Markdown files. The commands
+`:MarkdownPreview`, `:MarkdownPreviewToggle`, and `:MarkdownPreviewStop` are
+also available. lazy.nvim downloads the plugin and its prebuilt preview server
+on installation; no manual Node.js/Yarn build is required. After adding the
+plugin, restart Neovim and let lazy.nvim finish installing it (or run
+`:Lazy install`).
+
+### Pasting images into Markdown
+
+In a saved Markdown file, copy a screenshot or image to the system clipboard,
+then press **`Space m v` in Normal mode**. `img-clip.nvim` saves it as a uniquely
+named PNG in an `images/` folder beside that Markdown file and inserts a relative
+image reference. The cursor enters the alt-text field: type a description and
+press `Esc`. Snacks handles displaying the inserted image in Kitty.
+
+The shortcut is Markdown-buffer-local and refuses unnamed or derived preview
+buffers: save the file and use the normal source view first. Normal text paste,
+existing shortcuts, and terminal drag-and-drop behavior are unchanged. Copied
+local image paths are imported into the same `images/` folder; images are not
+embedded as base64. Include the image files when sharing or committing Markdown.
+
+Restart Neovim and let lazy.nvim install the plugin. On Linux, the machine
+running Neovim needs `xclip` on X11 or `wl-clipboard` (`wl-paste`) on Wayland.
+Run `:checkhealth img-clip` there to verify clipboard support. The plugin also
+provides `:PasteImage`, `:ImgClipConfig`, and `:ImgClipDebug` for direct use and
+diagnostics; `Space m v` adds the saved-source-buffer safety check.
+
+### Wrapped Markdown tables
+
+`markdown-table-wrap.nvim` wraps long cell contents inside aligned table borders
+without rewriting the Markdown source. It loads only for Markdown. Documents
+containing pipe tables automatically render them inline in the original file
+buffer. This keeps Snacks images, the normal Feline status bar, and file-based
+tools working together. No Reader/source switch is needed for normal use.
+
+| Shortcut | Action |
+| --- | --- |
+| `Space m r` | Toggle the optional separate Reader/source view |
+| `Space m i` | Toggle inline tables/source |
+| `Space m f` | Open a floating preview of the table under the cursor |
+
+Inline tables remain visible when the cursor moves elsewhere in the document.
+Insert/Visual mode temporarily exposes the source for editing; normal-mode
+automatic rendering returns afterwards. `Space m i` toggles between the rendered
+table and raw source without replacing the file buffer. The existing
+browser-preview shortcuts are unchanged.
+
+For reliable inline replacement, the plugin temporarily disables native soft
+wrapping in windows containing rendered tables; the cells still wrap within
+their allocated widths. Turning inline tables off restores the previous wrap
+setting, as does leaving the Markdown buffer. Ordinary files are unaffected.
+
+Reader is still available explicitly with `Space m r`, but its separate derived
+buffer is not the combined image/table editing view. In Reader, `q` returns to
+source and pauses automatic reopening; use `Space m i` to restore inline tables.
+In a float, `q` or `Esc` returns to the previous view.
+
+`Alt+w` opens Neo-tree and reveals the backing Markdown file even from Reader
+or Float, rather than treating the virtual preview name as a filesystem path.
+For an unnamed source buffer it opens the tree without attempting a reveal.
+
+The table renderer in `render-markdown.nvim` is disabled only for the `markdown`
+filetype to avoid duplicate rendering. Its other Markdown styling and Avante
+table rendering remain enabled. The normal source buffer now supports images
+and inline tables together; browser preview remains an alternative full-document
+view.
+
+Restart Neovim and let lazy.nvim install the new plugin (or run `:Lazy install`).
+Neovim 0.10+ is required; no external binaries are needed. Use
+`:MarkdownTableStatus`, `:MarkdownTableHelp`, or `:checkhealth markdown-table-wrap`
+for diagnostics. To disable automatic rendering for a buffer, run
+`:MarkdownTableDisableAutoPreview`; the shortcuts still work on demand.
+
+### Inline Markdown images in Kitty
+
+The existing `render-markdown.nvim` plugin styles Markdown; `snacks.nvim` adds
+inline images. Only Snacks' image component is enabled: it does not replace the
+file picker, notifications, terminal, or other existing tools.
+
+1. Open Kitty and launch Neovim as you normally do. This uses the same Neovim
+   configuration; no terminal migration or default-terminal change is needed.
+2. Let lazy.nvim install Snacks (or run `:Lazy install` and restart Neovim).
+3. Open `doc/markdown-images-demo.md` from this configuration directory. The
+   linked PNG should appear inline, not in your browser.
+
+Kitty and ImageMagick must be installed on the machine running Neovim. The
+`markdown` and `markdown_inline` Tree-sitter parsers are already in the install
+list. If necessary, run `:TSInstall markdown markdown_inline`.
+
+For troubleshooting, use `:checkhealth snacks` and check the image section.
+Try Kitty directly, without tmux first; tmux may need `allow-passthrough on`.
+Inline images are not supported in Terminator, but browser preview remains
+available there using `Space m p`. ImageMagick is needed for conversion of
+formats other than PNG; PDF, math, and diagram rendering can need additional
+tools and are not prerequisites for this local PNG demo.
+
 Requirements:
 
 #install

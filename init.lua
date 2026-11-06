@@ -757,6 +757,126 @@ live_grep = {
     end,
   },
 
+  { -- Inline images in Markdown when running in Kitty (or another supported terminal)
+    'folke/snacks.nvim',
+    priority = 1000,
+    lazy = false,
+    opts = {
+      image = {
+        enabled = true,
+        doc = {
+          enabled = true,
+          inline = true,
+        },
+      },
+    },
+  },
+
+  { -- Browser-based live Markdown preview
+    'iamcco/markdown-preview.nvim',
+    ft = { 'markdown' },
+    cmd = { 'MarkdownPreview', 'MarkdownPreviewToggle', 'MarkdownPreviewStop' },
+    -- A command build makes lazy.nvim load the plugin before running its installer.
+    build = ':call mkdp#util#install_sync()',
+    keys = {
+      {
+        '<leader>mp',
+        '<cmd>MarkdownPreviewToggle<CR>',
+        mode = 'n',
+        ft = 'markdown',
+        desc = '[M]arkdown [P]review toggle',
+        silent = true,
+      },
+      {
+        '<leader>ms',
+        '<cmd>MarkdownPreviewStop<CR>',
+        mode = 'n',
+        ft = 'markdown',
+        desc = '[M]arkdown preview [S]top',
+        silent = true,
+      },
+    },
+  },
+
+  { -- Paste clipboard images into Markdown as portable local files
+    'HakonHarnes/img-clip.nvim',
+    version = '^0.6',
+    ft = { 'markdown' },
+    cmd = { 'PasteImage' },
+    opts = {
+      default = {
+        dir_path = 'images',
+        relative_to_current_file = true,
+        use_absolute_path = false,
+        embed_image_as_base64 = false,
+        prompt_for_file_name = false,
+        copy_images = true,
+        download_images = false,
+        drag_and_drop = { enabled = false },
+        -- Keep rapid pastes from overwriting an image with the same timestamp.
+        file_name = function()
+          return 'image-' .. vim.fn.strftime('%Y%m%d-%H%M%S') .. '-' .. string.format('%d', (vim.uv or vim.loop).hrtime())
+        end,
+      },
+    },
+    keys = {
+      {
+        '<leader>mv',
+        function()
+          if vim.bo.buftype ~= '' or not vim.bo.modifiable or vim.api.nvim_buf_get_name(0) == '' then
+            vim.notify('Save the Markdown file and use its source view before pasting an image.', vim.log.levels.WARN)
+            return
+          end
+          require('img-clip').paste_image()
+        end,
+        mode = 'n',
+        ft = 'markdown',
+        desc = '[M]arkdown paste image (clipboard)',
+        silent = true,
+      },
+    },
+  },
+
+  { -- Wrap Markdown table cells without rewriting the source document
+    'ice345/markdown-table-wrap.nvim',
+    version = '^1',
+    ft = { 'markdown' },
+    opts = {
+      -- Stay in the real file so Snacks images and Feline keep working.
+      preview_mode = 'inline',
+      inline_mode = 'replace',
+      inline_wrap_scope = 'always',
+      auto_preview = true,
+      render_all = true,
+    },
+    keys = {
+      {
+        '<leader>mr',
+        '<cmd>MarkdownTableToggleReader<CR>',
+        mode = 'n',
+        ft = 'markdown',
+        desc = '[M]arkdown table [R]eader/source toggle',
+        silent = true,
+      },
+      {
+        '<leader>mi',
+        '<cmd>MarkdownTableToggleInline<CR>',
+        mode = 'n',
+        ft = 'markdown',
+        desc = '[M]arkdown table [I]nline toggle',
+        silent = true,
+      },
+      {
+        '<leader>mf',
+        '<cmd>MarkdownTableFloatPreview<CR>',
+        mode = 'n',
+        ft = 'markdown',
+        desc = '[M]arkdown table [F]loat preview',
+        silent = true,
+      },
+    },
+  },
+
   -- Helm language server support
   { "qvalentin/helm-ls.nvim", ft = "helm" },
 
@@ -1198,17 +1318,33 @@ live_grep = {
       -- vim.cmd.hi 'Comment gui=none'
     end,
   },
-  { --
+  {
     'EdenEast/nightfox.nvim',
-    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
+    lazy = false,
+    priority = 1000,
     version = '*',
-    -- init = function() -- This is the function that runs, AFTER loading
-    --   require('nightfox').setup({
-    --    options = {
-    --      terminal_colors = false, -- set to true or false as desired
-    --     },
-    --   })
-    -- end,
+    config = function()
+      local function apply_nightfox()
+        if vim.g.colors_name ~= 'nightfox' or vim.o.background ~= 'dark' then
+          vim.cmd.colorscheme 'nightfox'
+        end
+      end
+
+      apply_nightfox()
+
+      -- Neovim 0.12 can reset the colorscheme when a delayed OSC-11
+      -- terminal-background response arrives after startup.
+      vim.api.nvim_create_autocmd('TermResponse', {
+        group = vim.api.nvim_create_augroup('keep-nightfox', { clear = true }),
+        desc = 'Keep Nightfox after terminal background detection',
+        callback = function(event)
+          local sequence = event.data and event.data.sequence or ''
+          if sequence:match '^\027%]11;' then
+            vim.schedule(apply_nightfox)
+          end
+        end,
+      })
+    end,
   },
   {
     -- :CtrlSF mypattern % = search for mypattern in current file
@@ -1310,28 +1446,18 @@ live_grep = {
       "ibhagwan/fzf-lua", -- for file_selector provider fzf
       "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
       "zbirenbaum/copilot.lua", -- for providers='copilot'
-      -- {
-      --   -- support for image pasting
-      --   "HakonHarnes/img-clip.nvim",
-      --   event = "VeryLazy",
-      --   opts = {
-      --     -- recommended settings
-      --     default = {
-      --       embed_image_as_base64 = false,
-      --       prompt_for_file_name = false,
-      --       drag_and_drop = {
-      --         insert_mode = true,
-      --       },
-      --       -- required for Windows users
-      --       use_absolute_path = true,
-      --     },
-      --   },
-      -- },
+
       {
         -- Make sure to set this up properly if you have lazy=true
         'MeanderingProgrammer/render-markdown.nvim',
         opts = {
           file_types = { "markdown", "Avante" },
+          -- Let markdown-table-wrap own Markdown tables; keep Avante unchanged.
+          overrides = {
+            filetype = {
+              markdown = { pipe_table = { enabled = false } },
+            },
+          },
         },
         ft = { "markdown", "Avante" },
       },
@@ -1480,9 +1606,6 @@ live_grep = {
     hererocks = false,
   },
 })
-
--- Set the neovim theme
-vim.cmd.colorscheme 'nightfox'
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
