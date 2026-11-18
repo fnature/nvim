@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Show file sizes from a 26-column Neo-tree width instead of 64, with a compact
+  8-character size column to reduce padding beside filenames.
+
 - Keep Neo-tree full-height on the left when horizontal ToggleTerm windows open,
   preserving focus and sidebar width across opening orders and repeated toggles.
 

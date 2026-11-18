@@ -33,6 +33,12 @@ return {
     },
   },
   opts = {
+    default_component_configs = {
+      file_size = {
+        required_width = 26, -- Show sizes at about 40% of the default 64-column threshold.
+        width = 8, -- Less padding between filenames and their sizes.
+      },
+    },
     event_handlers = {
       {
         event = 'neo_tree_window_after_open',
