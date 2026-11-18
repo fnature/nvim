@@ -35,7 +35,7 @@ return {
   opts = {
     default_component_configs = {
       file_size = {
-        required_width = 26, -- Show sizes at about 40% of the default 64-column threshold.
+        required_width = 44, -- Minimum sidebar width before file sizes appear.
         width = 8, -- Less padding between filenames and their sizes.
       },
     },
