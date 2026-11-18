@@ -33,6 +33,14 @@ return {
     },
   },
   opts = {
+    event_handlers = {
+      {
+        event = 'neo_tree_window_after_open',
+        handler = function()
+          require('custom.window-layout').keep_tree_full_height()
+        end,
+      },
+    },
     filesystem = {
       follow_current_file = { enabled = true,}, -- Automatically focus the current file
       use_libuv_file_watcher = true, -- Neo-tree does not need to be manually refreshed 
@@ -70,6 +78,7 @@ return {
        },
 
       window = {
+        width = 28, -- Start narrow; native resize tracking keeps rendering responsive.
         mappings = {
           ['<A-w>'] = 'close_window',
         },

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Keep Neo-tree full-height on the left when horizontal ToggleTerm windows open,
+  preserving focus and sidebar width across opening orders and repeated toggles.
+
+- Open Neo-tree after startup session handling: plain `nvim` focuses the sidebar,
+  while an explicit file argument opens the sidebar without stealing file focus.
+  The sidebar starts at 28 columns, 30% narrower than the default, using normal
+  Neo-tree configuration so resizing expands filenames and restores size/date columns.
+
 - Exclude Neo-tree sidebar buffers from saved sessions to prevent ordinary
   `neo-tree filesystem [1]` buffers and E95 collisions after restoring.
 

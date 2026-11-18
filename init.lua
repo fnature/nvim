@@ -1298,7 +1298,11 @@ live_grep = {
     opts = {
       start_in_insert = true,
       persist_mode = false,  -- Always start in insert mode
-      -- Add other options here as needed
+      on_open = function(term)
+        if term.direction == 'horizontal' then
+          require('custom.window-layout').keep_tree_full_height()
+        end
+      end,
     },
     config = function(_, opts)
       require('toggleterm').setup(opts)
@@ -1542,6 +1546,22 @@ live_grep = {
   {
     'rmagatti/auto-session',
     config = function()
+      -- Capture launch arguments before session restoration can replace them.
+      local focus_startup_tree = vim.fn.argc() == 0
+      local startup_tree_pending = true
+      local function open_startup_tree()
+        if not startup_tree_pending then return end
+        startup_tree_pending = false
+        vim.schedule(function()
+          require('neo-tree.command').execute {
+            action = focus_startup_tree and 'focus' or 'show',
+            source = 'filesystem',
+            dir = vim.fn.getcwd(),
+            reveal = false,
+          }
+        end)
+      end
+
       require('auto-session').setup {
         log_level = 'error',
         -- Keep one workspace per directory; never fall back to an unrelated session.
@@ -1551,6 +1571,13 @@ live_grep = {
         single_session_mode = false,
         -- Recreate the sidebar on demand; never restore it as an ordinary file.
         close_filetypes_on_save = { 'checkhealth', 'neo-tree' },
+        -- Wait until restoration has finished (or no startup session was found).
+        post_restore_cmds = { open_startup_tree },
+        no_restore_cmds = {
+          function(is_startup)
+            if is_startup then open_startup_tree() end
+          end,
+        },
         auto_session_suppress_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
         auto_session_use_git_branch = false,
 
