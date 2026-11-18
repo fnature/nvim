@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased
+
+- Exclude Neo-tree sidebar buffers from saved sessions to prevent ordinary
+  `neo-tree filesystem [1]` buffers and E95 collisions after restoring.
+
+- Restore buffers, splits, and tabs separately for each working directory, with
+  automatic saving enabled and no fallback to the last unrelated session.
+
+- Added the `ih` text object for an indentation scope plus its heading, excluding
+  the following sibling: `yih` copies and `vih` selects, with a which-key label.
+  Start on a direct child of the intended heading; existing `ii`/`ai` are unchanged.
+
+## 2026-11-09
+
+- Kept Markdown rendered under the cursor while browsing in Normal mode, instead
+  of revealing raw syntax as the cursor moves. Insert mode exposes the source
+  throughout the window; returning to Normal mode restores rendering. Avante's
+  rendering and the separate wrapped-table renderer are unchanged.
+
 ## 2026-11-06
 
 - Added Markdown-only `Space m v` image pasting with `img-clip.nvim`: clipboard

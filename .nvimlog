@@ -1,0 +1,2 @@
+WRN 2026-11-18T09:35:56.352 ?.1328     server_start:199: Failed to start server: no such file or directory: /tmp/hermes-runtime/
+WRN 2026-11-18T09:51:25.423 ?.902      server_start:199: Failed to start server: no such file or directory: /tmp/hermes-runtime/

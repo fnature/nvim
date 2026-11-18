@@ -269,6 +269,8 @@ require('lazy').setup({
 
       -- Document existing key chains
       require("which-key").add {
+        -- mini.ai owns the i prefix, so advertise ih directly in the operator menu.
+        { "i", group = "Inside (ih: indent + header)", mode = { "o", "x" } },
         { "<leader>c", name = "[C]ode" },
         { "<leader>d", name = "[D]ocument" },
         { "<leader>r", name = "[R]ename" },
@@ -1084,6 +1086,21 @@ live_grep = {
       --
       -- Shows indentation lines
       require('mini.indentscope').setup()
+
+      -- Indentation scope plus its heading, without the following sibling.
+      -- Start on a direct child: yih copies, vih selects, and "+yih uses the clipboard.
+      vim.keymap.set({ 'o', 'x' }, 'ih', function()
+        local scope = MiniIndentscope.get_scope(nil, nil, { border = 'top', indent_at_cursor = false })
+        local header = scope.border.top
+        if not header or header < 1 or scope.body.is_incomplete then
+          return '<Esc>'
+        end
+
+        -- Return keys so invalid scopes can cancel the pending operator cleanly.
+        local mode = vim.fn.mode()
+        local reset = (mode == 'v' or mode == 'V' or mode == '\22') and '<Esc>' or ''
+        return reset .. ('<Cmd>normal! %dGV%dGg_<CR>'):format(header, scope.body.bottom)
+      end, { expr = true, desc = 'Indent scope + header' })
       --
       -- Folder explorer
       require('mini.files').setup()
@@ -1455,7 +1472,16 @@ live_grep = {
           -- Let markdown-table-wrap own Markdown tables; keep Avante unchanged.
           overrides = {
             filetype = {
-              markdown = { pipe_table = { enabled = false } },
+              markdown = {
+                -- Browse rendered text, including the cursor line; edit raw Markdown.
+                render_modes = { 'n', 'c', 't' },
+                anti_conceal = { enabled = false },
+                win_options = {
+                  conceallevel = { default = 0 },
+                  concealcursor = { rendered = 'nc' },
+                },
+                pipe_table = { enabled = false },
+              },
             },
           },
         },
@@ -1518,6 +1544,13 @@ live_grep = {
     config = function()
       require('auto-session').setup {
         log_level = 'error',
+        -- Keep one workspace per directory; never fall back to an unrelated session.
+        auto_save = true,
+        auto_restore = true,
+        auto_restore_last_session = false,
+        single_session_mode = false,
+        -- Recreate the sidebar on demand; never restore it as an ordinary file.
+        close_filetypes_on_save = { 'checkhealth', 'neo-tree' },
         auto_session_suppress_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
         auto_session_use_git_branch = false,
 
